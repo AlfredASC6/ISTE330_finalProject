@@ -13,7 +13,7 @@ USE researchInterests;
 CREATE TABLE person(
 	username VARCHAR(15) NOT NULL PRIMARY KEY, 
     password VARCHAR(30) NOT NULL, 
-    ID INT NOT NULL UNIQUE,
+    ID INT NOT NULL UNIQUE AUTO_INCREMENT,
     discriminator VARCHAR(1)
 )ENGINE=InnoDB DEFAULT CHARSET= utf8;
 
@@ -43,7 +43,8 @@ CREATE TABLE faculty(
 )ENGINE=InnoDB DEFAULT CHARSET= utf8;
 
 CREATE TABLE abstract(
-	abstractID INT NOT NULL PRIMARY KEY,
+	abstractID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(120),
     abstract MEDIUMTEXT
 )ENGINE=InnoDB DEFAULT CHARSET= utf8;
 
@@ -57,10 +58,8 @@ CREATE TABLE faculty_abstract(
 
 CREATE TABLE faculty_keytopics(
 	facultyID INT NOT NULL,
-    keytopicID INT AUTO_INCREMENT,
     keytopic VARCHAR(50),
-    PRIMARY KEY (facultyID, keytopicID),
-    UNIQUE (keytopicID),
+    PRIMARY KEY (facultyID, keytopic),
     CONSTRAINT faculty_keytopics_faculty FOREIGN KEY (facultyID) REFERENCES faculty(facultyID)
 )ENGINE=InnoDB DEFAULT CHARSET= utf8;
 
@@ -77,10 +76,8 @@ CREATE TABLE student(
 
 CREATE TABLE student_keytopics(
 	studentID INT NOT NULL,
-    keytopicID INT NOT NULL AUTO_INCREMENT,
     keytopic VARCHAR(50),
-    PRIMARY KEY (studentID, keytopicID),
-    UNIQUE (keytopicID),
+    PRIMARY KEY (studentID, keytopic),
     CONSTRAINT student_keytopics_student FOREIGN KEY (studentID) REFERENCES student(studentID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -96,10 +93,8 @@ CREATE TABLE guest(
 
 CREATE TABLE guest_keytopics(
 	guestID INT NOT NULL,
-    keytopicID INT NOT NULL AUTO_INCREMENT,
     keytopic VARCHAR(50),
-    PRIMARY KEY (guestID, keytopicID),
-    UNIQUE (keytopicID),
+    PRIMARY KEY (guestID, keytopic),
     CONSTRAINT guest_keytopics_guest FOREIGN KEY (guestID) REFERENCES guest(guestID)
 )ENGINE=InnoDB DEFAULT CHARSET= utf8;
 
@@ -107,12 +102,12 @@ CREATE TABLE guest_keytopics(
 -- the first professor, student, and guest will match
 -- the second professor, student, and guest will match
 -- everyone has the same phone number because this is just for testing 
-INSERT INTO person (username, password, ID) VALUES ("prof1", "password1", 0001);
-INSERT INTO person (username, password, ID) VALUES ("prof2", "password1", 0002);
-INSERT INTO person (username, password, ID) VALUES ("student1", "password1", 1001);
-INSERT INTO person (username, password, ID) VALUES ("student2", "password1", 1002);
-INSERT INTO person (username, password, ID) VALUES ("guest1", "password1", 2001);
-INSERT INTO person (username, password, ID) VALUES ("guest2", "password1", 2002);
+INSERT INTO person (username, password, ID, discriminator) VALUES ("prof1", "password1", 0001, "F");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("prof2", "password1", 0002, "F");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("student1", "password1", 1001, "S");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("student2", "password1", 1002, "S");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("guest1", "password1", 2001, "G");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("guest2", "password1", 2002, "G");
 
 INSERT INTO department (departmentID, department) VALUES (1, "Computer Science");
 INSERT INTO department (departmentID, department) VALUES (2, "Computer Engineering");
@@ -125,103 +120,233 @@ INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, o
 INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentID)
 	VALUES (0002, "Jane", "Brown", "janebrown@rit.edu", "5851111111", "5851111111", 222, "KGH", 2);
     
-INSERT INTO abstract (abstractID, abstract) VALUES (1, "Test abstract 1");
-INSERT INTO abstract (abstractID, abstract) VALUES (2, "Test abstract 2");
+INSERT INTO abstract (abstractID, title, abstract) VALUES (1, "Introduction to Computing and Programming in PYTHON – A
+													Multimedia Approach", "The programming language used in this book is Python. Python
+													has been described as “executable pseudo-code.” I have found
+													that both computer science majors and non majors can learn
+													Python. Since Python is actually used for communications tasks
+													(e.g., Web site Development), it’s relevant language for an in
+													introductory computing course. The specific dialect of Python
+													used in this book is Jython. Jython is Python. The differences
+													between Python (normally implemented in C) and Jython
+													(which is implemented in Java) are akin to the differences
+													between any two language implementations (e.g., Microsoft vs.
+													GNU C++ implementations).");
+INSERT INTO abstract (abstractID, title, abstract) VALUES (2, "C through Design", "This book presents ‘standard’ C, i.e., code that compiles cleanly
+													with a compiler that meets the ANSI C standard. This book has
+													over 90 example programs that illustrate the topics of each
+													chapters. In addition complete working programs are
+													developed fully, from design to program output. This book is
+													filled with Antibugging Notes (the stress traps to be avoided),
+													and Quick Notes, that emphasize important points to be
+													remembered.");
 
 INSERT INTO faculty_abstract (facultyID, abstractID) VALUES (0001, 1);
 INSERT INTO faculty_abstract (facultyID, abstractID) VALUES (0002, 2);
 
-INSERT INTO faculty_keytopics (facultyID, keytopicID, keytopic) VALUES (0001, 1, "Java Applications");
-INSERT INTO faculty_keytopics (facultyID, keytopicID, keytopic) VALUES (0002, 2, "Computer Architecture");
+INSERT INTO faculty_keytopics (facultyID, keytopic) VALUES (0001, "Java Applications");
+INSERT INTO faculty_keytopics (facultyID, keytopic) VALUES (0002, "Computer Architecture");
 
 INSERT INTO student (studentID, fName, lName, email, phoneNum, departmentID)
 	VALUES (1001, "Olivia", "Richardson", "oliviarich@rit.edu", "5851111111", "1");
 INSERT INTO student (studentID, fName, lName, email, phoneNum, departmentID)
 	VALUES (1002, "Zack", "Green", "zgreenh@rit.edu", "5851111111", "2");
     
-INSERT INTO student_keytopics (studentID, keytopicID, keytopic) VALUES (1001, 1, "Java Applications");
-INSERT INTO student_keytopics (studentID, keytopicID, keytopic) VALUES (1002, 2, "Computer Architecture");
+INSERT INTO student_keytopics (studentID, keytopic) VALUES (1001, "Java Applications");
+INSERT INTO student_keytopics (studentID, keytopic) VALUES (1002, "Computer Architecture");
 
 INSERT INTO guest (guestID, fName, lName, company, email, phoneNum)
 	VALUES (2001, "Tom", "Tompson", "Oracle", "tom@gmail.com", "5851111111");
 INSERT INTO guest (guestID, fName, lName, company, email, phoneNum)
 	VALUES (2002, "Rachel", "Johnson", "L3Harris", "rjohnson@gmail.com", "5851111111");
     
-INSERT INTO guest_keytopics (guestID, keytopicID, keytopic) VALUES (2001, 1, "Java Applications");
-INSERT INTO guest_keytopics (guestID, keytopicID, keytopic) VALUES (2002, 2, "Computer Architecture");
+INSERT INTO guest_keytopics (guestID, keytopic) VALUES (2001, "Java Applications");
+INSERT INTO guest_keytopics (guestID, keytopic) VALUES (2002, "Computer Architecture");
 
--- Stored Procedure for add and updating keytopics
+-- Stored Procedure for adding and updating keytopics
 -- add_faculty_keytopic needs:
--- faculty ID, keytopic ID, and keytopic
+-- faculty ID and keytopic
 
 DROP PROCEDURE IF EXISTS add_faculty_keytopic;
 DELIMITER //
 CREATE PROCEDURE add_faculty_keytopic(
-IN varfacultyID INT, 
-IN varkeytopicID INT, 
-IN varkeytopic VARCHAR(255)
+IN varfacultyID INT,
+IN varkeytopic VARCHAR(50)
 )
 BEGIN
-    DECLARE existingID INT;
+    DECLARE existingKeytopic VARCHAR(50);
 
-    SELECT facultyID INTO existingID
+    SELECT keytopic INTO existingKeytopic
     FROM faculty_keytopics
-    WHERE keytopicID = varkeytopicID AND facultyID = varfacultyID;
+    WHERE keytopic = varkeytopic AND facultyID = varfacultyID;
 
-  IF existingID IS NULL THEN
-    INSERT INTO faculty_keytopics (facultyID, keytopicID, keytopic)
-    VALUES (varfacultyID, varkeytopicID, varkeytopic);
-  ELSE
-    UPDATE faculty_keytopics
-    SET keytopic = varkeytopic
-    WHERE facultyID = varfacultyID AND keytopicID = varkeytopicID;
-  END IF;
+    IF existingKeytopic IS NULL THEN
+        INSERT INTO faculty_keytopics (facultyID, keytopic)
+        VALUES (varfacultyID, varkeytopic);
+    END IF;
 END //
 DELIMITER ;
 
--- Stored Procedure for deleting keytopics
+-- Stored Procedure for deleting keytopics for faculty
 -- delete_faculty_keytopic needs:
--- faculty ID and keytopic ID
+-- faculty ID and keytopic
 
 DROP PROCEDURE IF EXISTS delete_faculty_keytopic;
 DELIMITER //
 CREATE PROCEDURE delete_faculty_keytopic(
-IN varkeytopicID INT,
+IN varkeytopic VARCHAR(50),
 IN varfacultyID INT
 )
 BEGIN
     DELETE FROM faculty_keytopics
-    WHERE keytopicID = varkeytopicID AND facultyID = varfacultyID;
+    WHERE keytopic = varkeytopic AND facultyID = varfacultyID;
 END //
 DELIMITER ;
 
--- Stored Procedure for searching for keytopics
--- KeytopicID needs:
--- Keytopic ID
+-- Stored Procedure for adding keytopics for students
+-- add_student_keytopic needs:
+-- student ID and keytopic
 
-DROP PROCEDURE IF EXISTS match_keytopic;
+DROP PROCEDURE IF EXISTS add_student_keytopic;
 DELIMITER //
-CREATE PROCEDURE match_keytopic(
-IN varKeytopicID INT
+CREATE PROCEDURE add_student_keytopic(
+IN varstudentID INT,
+IN varkeytopic VARCHAR(50)
 )
 BEGIN
-    SELECT 
-        faculty_keytopics.keytopicID AS Faculty_TopicID, faculty_keytopics.keytopic AS Faculty_Topic,
-        student_keytopics.keytopicID AS Student_TopicID, student_keytopics.keytopic AS Student_Topic,
-        guest_keytopics.keytopicID AS Guest_TopicID, guest_keytopics.keytopic AS Guest_Topic
-    FROM 
-        faculty_keytopics
-    INNER JOIN 
-        student_keytopics
-    ON 
-        faculty_keytopics.keytopicID = student_keytopics.keytopicID
-    INNER JOIN
-        guest_keytopics
-    ON
-        faculty_keytopics.keytopicID = guest_keytopics.keytopicID
-    WHERE
-        faculty_keytopics.keytopicID = varKeytopicID;
+    DECLARE existingKeytopic VARCHAR(50);
+
+    SELECT keytopic INTO existingKeytopic
+    FROM student_keytopics
+    WHERE keytopic = varkeytopic AND studentID = varstudentID;
+
+    IF existingKeytopic IS NULL THEN
+        INSERT INTO student_keytopics (studentID, keytopic)
+        VALUES (varstudentID, varkeytopic);
+    END IF;
 END //
 DELIMITER ;
 
-SHOW PROCEDURE STATUS WHERE db Like "research%"; 
+-- Stored Procedure for deleting keytopics for students
+-- delete_student_keytopic needs:
+-- student ID and keytopic
+
+DROP PROCEDURE IF EXISTS delete_student_keytopic;
+DELIMITER //
+CREATE PROCEDURE delete_student_keytopic(
+IN varkeytopic VARCHAR(50),
+IN varstudentID INT
+)
+BEGIN
+    DELETE FROM student_keytopics
+    WHERE keytopic = varkeytopic AND studentID = varstudentID;
+END //
+DELIMITER ;
+
+-- Stored Procedure for adding keytopics for guests
+-- add_guest_keytopic needs:
+-- guest ID and keytopic
+
+DROP PROCEDURE IF EXISTS add_guest_keytopic;
+DELIMITER //
+CREATE PROCEDURE add_guest_keytopic(
+IN varguestID INT,
+IN varkeytopic VARCHAR(50)
+)
+BEGIN
+    DECLARE existingKeytopic VARCHAR(50);
+
+    SELECT keytopic INTO existingKeytopic
+    FROM guest_keytopics
+    WHERE keytopic = varkeytopic AND guestID = varguestID;
+
+    IF existingKeytopic IS NULL THEN
+        INSERT INTO guest_keytopics (guestID, keytopic)
+        VALUES (varguestID, varkeytopic);
+    END IF;
+END //
+DELIMITER ;
+
+-- Stored Procedure for deleting keytopics for guests
+-- delete_guest_keytopic needs:
+-- guest ID and keytopic
+
+DROP PROCEDURE IF EXISTS delete_guest_keytopic;
+DELIMITER //
+CREATE PROCEDURE delete_guest_keytopic(
+IN varkeytopic VARCHAR(50),
+IN varguestID INT
+)
+BEGIN
+    DELETE FROM guest_keytopics
+    WHERE keytopic = varkeytopic AND guestID = varguestID;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS insert_abstract;
+DELIMITER //
+CREATE PROCEDURE insert_abstract(
+	IN abstractTitle VARCHAR(120),
+    IN abstractText MEDIUMTEXT,
+    IN facID INT
+)
+BEGIN
+
+	DECLARE id INT;
+    
+	INSERT INTO abstract (title, abstract) VALUES (abstractTitle, abstractText);
+    
+    SELECT abstractID INTO id 
+		FROM abstract
+        WHERE title LIKE abstractTitle;
+        
+	INSERT INTO faculty_abstract (facultyID, abstractID) VALUES (facID, id);
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_abstract;
+DELIMITER //
+CREATE PROCEDURE delete_abstract(
+	IN abstractTitle VARCHAR(120),
+    IN facID INT
+)
+BEGIN
+
+	DECLARE id INT;
+    
+    SELECT abstractID INTO id 
+		FROM abstract
+        WHERE title LIKE abstractTitle;
+        
+	DELETE FROM faculty_abstract 
+		WHERE facultyID = facID AND abstractID = id;
+	DELETE FROM abstract 
+		WHERE abstractID = id;
+	
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS update_abstract;
+DELIMITER //
+CREATE PROCEDURE update_abstract(
+	IN oldTitle VARCHAR(120),
+    IN newTitle VARCHAR(120),
+    IN oldAbstract MEDIUMTEXT,
+    IN newAbstract MEDIUMTEXT
+)
+BEGIN
+
+	DECLARE id INT;
+    
+    SELECT abstractID INTO id 
+		FROM abstract
+        WHERE title LIKE oldTitle;
+        
+	UPDATE abstract 
+		SET title = newTitle, abstract = newAbstract
+        WHERE title = oldTitle AND abstract = oldAbstract;
+	
+END //
+DELIMITER ;
+
+SHOW PROCEDURE STATUS WHERE db Like "research%";
