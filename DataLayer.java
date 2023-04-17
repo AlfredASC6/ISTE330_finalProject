@@ -1,3 +1,18 @@
+/*
+Fennell, Kayla
+Chen, Steven
+Franco, Alfred
+Conte, Jacob
+Foley, Ben
+Chuhi, Reg
+
+Group 1
+
+ISTE 330 
+Group HW
+4/14/23
+*/
+
 //start of encryption libraries
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -63,7 +78,7 @@ public class DataLayer {
 	// begin connection with given credentials
 	private void loadConnection(String username, String password, String database) {
 		try {
-			connection = DriverManager.getConnection(URL_HEADING + database, username, password);
+			connection = DriverManager.getConnection(URL_HEADING + database + "?serverTimezone=UTC", username, password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,75 +97,237 @@ public class DataLayer {
 			return null;
 		}
 	}
-	
-// delete faculty key topic
-public int deleteFacultyKeyTopic(int facultyId, String topic) {
-    try {
-        
-        String procedureCall = "{call delete_faculty_keytopic(?,?)}";
-        CallableStatement statement = connection.prepareCall(procedureCall);
+   
+   // insert person 
+   public void insertPerson(String username, String password, int id, String discriminator){
+      String sql = "";
+      String secretKey = "turtles";
+      String encryptedPass = encrypt(password, secretKey);
+      
+      try{
+         // faculty and student will use RIT id, guest will be given one (field is auto increment)
+         if(discriminator.equals("G")){
+            sql = "INSERT INTO person (username, password, discriminator) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, encryptedPass);
+            statement.setString(3, discriminator);
+         }
+         else{
+            sql = "INSERT INTO person (username, password, ID, discriminator) VALUES (?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, encryptedPass);
+            statement.setInt(3, id);
+            statement.setString(4, discriminator);
+         }
+         System.out.println("User profile has been inserted successfully");
+      }
+      catch (SQLException e) {
+           // handle any errors
+           e.printStackTrace();
+      }
+   }
+   	
+   // delete key topic
+   public int deleteKeyTopic(String topic, int ID, String discriminator) {
+      try {
+         String procedureCall = "";
+         if(discriminator.equals("F")){
+            procedureCall = "{call delete_faculty_keytopic(?,?)}";
+         }
+         else if(discriminator.equals("S")){
+            procedureCall = "{call delete_student_keytopic(?,?)}";
+         }
+         else if(discriminator.equals("G")){
+            procedureCall = "{call delete_guest_keytopic(?,?)}";
+         }
+   
+         CallableStatement statement = connection.prepareCall(procedureCall);
+   
+         statement.setString(1, topic);
+         statement.setInt(2, ID);
+         int result = statement.executeUpdate();
+   
+         System.out.println("Your keytopic has been successfully deleted");
+         return result;
+       } catch (SQLException e) {
+           // handle any errors
+           e.printStackTrace();
+           return -1;
+       }
+   }
+   
+   // update faculty key topic
+   public int insertKeyTopic(int ID, String topic, String discriminator) {
+      try {
+         String procedureCall = "";
+         if(discriminator.equals("F")){
+            procedureCall = "{call add_faculty_keytopic(?,?)}";
+         }
+         else if(discriminator.equals("S")){
+            procedureCall = "{call add_student_keytopic(?,?)}";
+         }
+         else if(discriminator.equals("G")){
+            procedureCall = "{call add_guest_keytopic(?,?)}";
+         }
+   
+         CallableStatement statement = connection.prepareCall(procedureCall);
+   
+         statement.setInt(1, ID);
+         statement.setString(2, topic);
+   
+         int result = statement.executeUpdate();
+      
+         System.out.println("Your keytopic has been successfully inserted");
+         return result;
+       } catch (SQLException e) {
+   
+           e.printStackTrace();
+           return -1;
+       }
+   } 
+   
+   //Add a faculty member
+   public void insertFacultyMember(int facultyId, String fName, String lName, String email, String phoneNum, String officePhoneNum, int officeNum, String buildingCode, int departmentId) {
+       try {
+           // create SQL statement
+           String sql = "INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentID) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+           PreparedStatement statement = connection.prepareStatement(sql);
+   
+           // set parameters
+           statement.setInt(1, facultyId);
+           statement.setString(2, fName);
+           statement.setString(3, lName);
+           statement.setString(4, email);
+           statement.setString(5, phoneNum);
+           statement.setString(6, officePhoneNum);
+           statement.setInt(7, officeNum);
+           statement.setString(8, buildingCode);
+           statement.setInt(9, departmentId);
+   
+           // execute statement
+           statement.executeUpdate();
+   
+           System.out.println("New faculty member inserted successfully!");
+       } catch (SQLException e) {
+           // handle any errors
+           e.printStackTrace();
+       }
+   }
+   
+   //Add a student
+   public void insertStudent(int studentID, String fName, String lName, String email, String phoneNum, int departmentId) {
+       try {
+           // create SQL statement
+           String sql = "INSERT INTO student (studentID, fName, lName, email, phoneNum, departmentID) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)";
+           PreparedStatement statement = connection.prepareStatement(sql);
+   
+           // set parameters
+           statement.setInt(1, studentID);
+           statement.setString(2, fName);
+           statement.setString(3, lName);
+           statement.setString(4, email);
+           statement.setString(5, phoneNum);
+           statement.setInt(6, departmentId);
+   
+           // execute statement
+           statement.executeUpdate();
+   
+           System.out.println("New student inserted successfully!");
+       } catch (SQLException e) {
+           // handle any errors
+           e.printStackTrace();
+       }
+   }
+   
+   //Add a guest
+   public void insertGuest(int guestID, String fName, String lName, String company, String email, String phoneNum) {
+       try {
+           // create SQL statement
+           String sql = "INSERT INTO guest (guestID, fName, lName, company, email, phoneNum) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)";
+           PreparedStatement statement = connection.prepareStatement(sql);
+   
+           // set parameters
+           statement.setInt(1, guestID);
+           statement.setString(2, fName);
+           statement.setString(3, lName);
+           statement.setString(4, company);
+           statement.setString(5, email);
+           statement.setString(6, phoneNum);
+   
+           // execute statement
+           statement.executeUpdate();
+   
+           System.out.println("New guest inserted successfully!");
+       } catch (SQLException e) {
+           // handle any errors
+           e.printStackTrace();
+       }
+   }
 
-        statement.setInt(1, facultyId);
-        statement.setString(2, topic);
-        int result = statement.executeUpdate();
+   
+   //start of insertFacultyAbstract
+   public void insertFacultyAbstract(String abstractTitle, String abstractText, int facultyID){
+      try{
+         String sql = "{CALL insert_abstract(?, ?, ?)}";
+         PreparedStatement stmt = connection.prepareStatement(sql);
+         
+         stmt.setString(1, abstractTitle);
+         stmt.setString(2, abstractText);
+         stmt.setInt(3, facultyID);
+         
+         stmt.executeUpdate();
+         
+         System.out.println("Executed code: " + sql);
+      }
+      catch(Exception e){
+         System.out.println("Error: " + e);
+      }
+   }//end of insertFacultyAbstract
+   
+   
+   public void deleteFacultyAbstract(String abstractTitle, int facultyID){
+      try{
+         String sql = "{CALL delete_abstract(?, ?)}";
+         PreparedStatement stmt = connection.prepareStatement(sql);
+         
+         stmt.setString(1, abstractTitle);
+         stmt.setInt(2, facultyID);
+         
+         stmt.executeUpdate();
+         
+         System.out.println("Executed code: " + sql);
+      }
+      catch(Exception e){
+         System.out.println("Error: " + e);
+      }
+   }//end of deleteFacultyAbstract
+   
+   //start of updateFacultyAbstract
+   public void updateFacultyAbstract(String oldTitle, String newTitle, String oldText, String newAbstract){
+      try{
+         String sql = "{CALL update_abstract(?, ?, ?, ?)}";
+         PreparedStatement stmt = connection.prepareStatement(sql);
+         
+         stmt.setString(1, oldTitle);
+         stmt.setString(2, newTitle);
+         stmt.setString(3, oldText);
+         stmt.setString(4, newAbstract);
+         
+         stmt.executeUpdate();
+         
+         System.out.println("Executed code: " + sql);
+      }
+      catch(Exception e){
+         System.out.println("Error: " + e);
+      }
+   }//end of updateFacultyAbstract
 
-        return result;
-    } catch (SQLException e) {
-        // handle any errors
-        e.printStackTrace();
-        return -1;
-    }
-}
 
-// update faculty key topic
-public int updateFacultyKeyTopic(int facultyId, String oldTopic, String newTopic) {
-    try {
-    
-        String procedureCall = "{call faculty_key_topic(?,?,?)}";
-        CallableStatement statement = connection.prepareCall(procedureCall);
-
-        statement.setInt(1, facultyId);
-        statement.setString(2, oldTopic);
-        statement.setString(3, newTopic);
-
-        int result = statement.executeUpdate();
-
-        return result;
-    } catch (SQLException e) {
-
-        e.printStackTrace();
-        return -1;
-    }
-} 
-
-//Add a faculty member
-public void insertFacultyMember(int facultyId, String fName, String lName, String email, String phoneNum, String officePhoneNum, int officeNum, String buildingCode, int departmentId) {
-    try {
-        // create SQL statement
-        String sql = "INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentID) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(sql);
-
-        // set parameters
-        statement.setInt(1, facultyId);
-        statement.setString(2, fName);
-        statement.setString(3, lName);
-        statement.setString(4, email);
-        statement.setString(5, phoneNum);
-        statement.setString(6, officePhoneNum);
-        statement.setInt(7, officeNum);
-        statement.setString(8, buildingCode);
-        statement.setInt(9, departmentId);
-
-        // execute statement
-        statement.executeUpdate();
-
-        System.out.println("New faculty member inserted successfully!");
-    } catch (SQLException e) {
-        // handle any errors
-        e.printStackTrace();
-    }
-}
    //encryption stuff where we use SHA-256
    public static void setKey(final String myKey){
       MessageDigest sha = null;
@@ -201,8 +378,8 @@ public void insertFacultyMember(int facultyId, String fName, String lName, Strin
         String sql = "{CALL match_keyTopic(?)}";
         CallableStatement cs = connection.prepareCall(sql);
         cs.setInt(1, studentID);
-        rs = cs.executeQuery(sql);
-        
+        rs = cs.executeQuery();
+                
         while(rs.next()){
            matched = rs.getString(1);
         }
@@ -219,7 +396,7 @@ public void insertFacultyMember(int facultyId, String fName, String lName, Strin
      String abstractTopic = "";
      
      try{
-        String getFacultyAbstract = "SELECT abstract.abstract FROM faculty_abstract JOIN abstract ON faculty_abstract.facultyID = " + facultyID + "  && abstract.abstractID = " + abstractID;
+        String getFacultyAbstract = "SELECT abstract FROM abstract WHERE abstractID = (SELECT abstractID FROM faculty_abstract WHERE facultyID = " + facultyID + ")";
         
         PreparedStatement stmt = connection.prepareStatement(getFacultyAbstract);
         
@@ -265,9 +442,9 @@ public void insertFacultyMember(int facultyId, String fName, String lName, Strin
      String tbreturned = "";
      
      
-     String tempList[] = abstractText.split("\\s+");
-     String tempList1[] = facultyInterests.split("\\s+");
-     
+     String tempList[] = abstractText.replaceAll("[^a-zA-Z]+", " ").split("\\s+");
+     String tempList1[] = facultyInterests.replaceAll("[^a-zA-Z]+", " ").split("\\s+");
+          
      List <String> abstractList = Arrays.asList(tempList);
      List <String> facultyInterestsList = Arrays.asList(tempList1);
      
@@ -289,4 +466,72 @@ public void insertFacultyMember(int facultyId, String fName, String lName, Strin
 
      return tbreturned;
   }
+
+   public static void main(String[] args) {
+   	  System.out.println("Login");
+   	    DataLayer dataLayer = new DataLayer(); // Create a new object. An Instantiation
+   	    
+   	    Scanner scanner = new Scanner(System.in);
+   	    System.out.println("Please enter your role (faculty, student, or guest): ");
+   	    String role = scanner.nextLine().toLowerCase();
+   	    System.out.println("Please enter your ID: ");
+   	    
+   	    int ID = scanner.nextInt();
+   	    if(role.equals("faculty")) {
+   	    	System.out.println("Please enter the abstractID: ");
+   	    	int abstractID = scanner.nextInt();
+   	    	System.out.println("Please enter the abstract title: ");
+   	    	String inputAbstractTitle = scanner.nextLine();
+   	    	System.out.println("Please enter the abstract: ");
+   	    	String inputAbstract = scanner.nextLine();
+   	    	dataLayer.insertFacultyAbstract(inputAbstractTitle,inputAbstract, abstractID);
+   	    	
+   	    	System.out.println("Please enter the keytopics: ");
+   	    	String inputkeytopics = scanner.nextLine();
+   	    	dataLayer.insertKeyTopic(ID, inputkeytopics, "F");
+   	    	
+   	    	System.out.println(dataLayer.match(ID));
+   	    	
+   	    }else if(role.equals("student")) {
+   	    	System.out.println("Please enter the keytopics: ");
+   	    	String inputkeytopics = scanner.nextLine();
+   	    	
+   	    	dataLayer.insertKeyTopic(ID, inputkeytopics, "S");
+   	    	System.out.println(dataLayer.match(ID));
+   	    }else if(role.equals("guest")) {
+   
+   	    	System.out.println("Please enter the keytopics: ");
+   	    	String inputkeytopics = scanner.nextLine();
+   	    	//dataLayer.insertKeyTopic(ID, inputkeytopics, "G");
+   	    	System.out.println(dataLayer.match(ID));
+   	    
+   	    // Test getFacultyInterests
+   	    System.out.println("\nTesting getFacultyInterests:");
+   	    System.out.print("Enter faculty ID: ");
+   	    int facultyId2 = scanner.nextInt();
+   	    String interests = dataLayer.getFacultyInterests(facultyId2);
+   	    System.out.println("Interests: " + interests);
+   
+   	    // Test getAbstract
+   	    System.out.println("\nTesting getAbstract:");
+   	    System.out.print("Enter faculty ID: ");
+   	    int facultyId3 = scanner.nextInt();
+   	    System.out.print("Enter abstract ID: ");
+   	    int abstractId = scanner.nextInt();
+   	    String abstractText = dataLayer.getAbstract(facultyId3, abstractId);
+   	    System.out.println("Abstract: " + abstractText);
+   
+   	    // Test getAbstractKeyTopics
+   	    System.out.println("\nTesting getAbstractKeyTopics:");
+   	    System.out.print("Enter faculty ID: ");
+   	    int facultyId4 = scanner.nextInt();
+   	    System.out.print("Enter abstract ID: ");
+   	    int abstractId2 = scanner.nextInt();
+   	    String keyTopics = dataLayer.getAbstractKeyTopics(facultyId4, abstractId2);
+   	    System.out.println("Key Topics: " + keyTopics);
+   
+   	    // Don't forget to close the scanner when you're done using it
+   	    scanner.close();
+   	}
+   }
 }
