@@ -288,6 +288,10 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Stored Procedure for inserting abstracts for faculty 
+-- insert_abstract needs:
+-- abstract's title, abstract's text, and faculty ID
+
 DROP PROCEDURE IF EXISTS insert_abstract;
 DELIMITER //
 CREATE PROCEDURE insert_abstract(
@@ -308,6 +312,10 @@ BEGIN
 	INSERT INTO faculty_abstract (facultyID, abstractID) VALUES (facID, id);
 END //
 DELIMITER ;
+
+-- Stored Procedure for deleting abstracts for faculty 
+-- delete_abstract needs:
+-- abstract's title and faculty ID
 
 DROP PROCEDURE IF EXISTS delete_abstract;
 DELIMITER //
@@ -330,6 +338,10 @@ BEGIN
 	
 END //
 DELIMITER ;
+
+-- Stored Procedure for updating abstracts for faculty 
+-- update_abstract needs:
+-- abstract's old title, abstract's new title, abstract's old text, and abstract's new text
 
 DROP PROCEDURE IF EXISTS update_abstract;
 DELIMITER //
@@ -354,28 +366,70 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Stored Procedure for matching interests for people
+-- match_keytopic needs:
+-- person's ID and discriminator 
+
 DROP PROCEDURE IF EXISTS match_keytopic;
 DELIMITER //
 CREATE PROCEDURE match_keytopic(
-IN varKeytopicID INT
+  IN varID INT,
+  IN discriminator VARCHAR(1)
 )
 BEGIN
+  IF discriminator = 'F' THEN
     SELECT 
-        faculty_keytopics.keytopicID AS Faculty_TopicID, faculty_keytopics.keytopic AS Faculty_Topic,
-        student_keytopics.keytopicID AS Student_TopicID, student_keytopics.keytopic AS Student_Topic,
-        guest_keytopics.keytopicID AS Guest_TopicID, guest_keytopics.keytopic AS Guest_Topic
+      s.studentID, s.fName, s.lName, s.email,
+      student_keytopics.keytopic AS Student_Topic
     FROM 
-        faculty_keytopics
+      faculty_keytopics
     INNER JOIN 
-        student_keytopics
+      student_keytopics
     ON 
-        faculty_keytopics.keytopicID = student_keytopics.keytopicID
+      faculty_keytopics.keytopic = student_keytopics.keytopic
     INNER JOIN
-        guest_keytopics
-    ON
-        faculty_keytopics.keytopicID = guest_keytopics.keytopicID
+      student s ON s.studentID = student_keytopics.studentID
     WHERE
-        faculty_keytopics.keytopicID = varKeytopicID;
+      faculty_keytopics.facultyID = varID;
+
+  ELSEIF discriminator = 'S' THEN
+    SELECT 
+      f.facultyID, f.fName, f.lName, f.email,
+      faculty_keytopics.keytopic AS Faculty_Topic
+    FROM 
+      faculty_keytopics
+    INNER JOIN 
+      student_keytopics
+    ON 
+      faculty_keytopics.keytopic = student_keytopics.keytopic
+    INNER JOIN
+      faculty f ON f.facultyID = faculty_keytopics.facultyID
+    WHERE
+      student_keytopics.studentID = varID;
+
+  ELSEIF discriminator = 'G' THEN
+    SELECT 
+      f.facultyID, f.fName, f.lName, f.email,
+      faculty_keytopics.keytopic AS Faculty_Topic,
+      s.studentID, s.fName, s.lName, s.email,
+      student_keytopics.keytopic AS Student_Topic
+    FROM 
+      faculty_keytopics
+    INNER JOIN 
+      student_keytopics
+    ON 
+      faculty_keytopics.keytopic = student_keytopics.keytopic
+    INNER JOIN
+      faculty f ON f.facultyID = faculty_keytopics.facultyID
+    INNER JOIN
+      student s ON s.studentID = student_keytopics.studentID
+    INNER JOIN
+      guest_keytopics
+    ON
+      guest_keytopics.keytopic = faculty_keytopics.keytopic
+    WHERE
+      guest_keytopics.guestID = varID;
+  END IF;
 END //
 DELIMITER ;
 
