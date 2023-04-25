@@ -47,6 +47,8 @@ public class DataLayer {
    
    private ResultSet rs;
    private ResultSet rs1;
+   
+   private static int id;
 	
 	// create connection and prompt user for credentials
 	public DataLayer() {
@@ -481,6 +483,10 @@ public class DataLayer {
      }
      return tbreturned;
   }
+  
+  public static int getId() {
+	  return id;
+  }
 
    public static void main(String[] args) {
    	  System.out.println("Login");
@@ -490,36 +496,34 @@ public class DataLayer {
    	    System.out.println("Please enter your role (faculty, student, or guest): ");
    	    String role = scanner.nextLine().toLowerCase();
    	    System.out.println("Please enter your ID: ");
-   	    int ID = scanner.nextInt();
+   	    id = scanner.nextInt();
    	    scanner.nextLine(); // consume the newline character
    	    
    	    // Faculty prompt
    	    if(role.equals("faculty")) {
-   	    	System.out.println("Please enter the abstractID: ");
-   	    	int abstractID = scanner.nextInt();
    	    	scanner.nextLine(); // consume the newline character
    	    	System.out.println("Please enter the abstract title: ");
    	    	String inputAbstractTitle = scanner.nextLine();
    	    	System.out.println("Please enter the abstract: ");
    	    	String inputAbstract = scanner.nextLine();
-   	    	dataLayer.insertFacultyAbstract(inputAbstractTitle,inputAbstract, abstractID);
+   	    	dataLayer.insertFacultyAbstract(inputAbstractTitle,inputAbstract, id);
    	    	
    	    	System.out.println("Please enter the keytopics: ");
    	    	String inputkeytopics = scanner.nextLine();
-   	    	dataLayer.insertKeyTopic(ID, inputkeytopics, "F");
-   	    	System.out.println(dataLayer.match(ID, "F"));
+   	    	dataLayer.insertKeyTopic(id, inputkeytopics, "F");
+   	    	System.out.println(dataLayer.match(id, "F"));
    	     // Student prompt
    	    }else if(role.equals("student")) {
    	    	System.out.println("Please enter the keytopics: ");
    	    	String inputkeytopics = scanner.nextLine();
-   	    	dataLayer.insertKeyTopic(ID, inputkeytopics, "S");
-   	    	System.out.println(dataLayer.match(ID, "S"));
+   	    	dataLayer.insertKeyTopic(id, inputkeytopics, "S");
+   	    	System.out.println(dataLayer.match(id, "S"));
    	    // Guest prompt
    	    }else if(role.equals("guest")) {
    	    	System.out.println("Please enter the keytopics: ");
    	    	String inputkeytopics = scanner.nextLine();
-   	    	dataLayer.insertKeyTopic(ID, inputkeytopics, "G");
-   	    	System.out.println(dataLayer.match(ID, "G"));
+   	    	dataLayer.insertKeyTopic(id, inputkeytopics, "G");
+   	    	System.out.println(dataLayer.match(id, "G"));
    	    }
    	    scanner.close();
    } // end of main method

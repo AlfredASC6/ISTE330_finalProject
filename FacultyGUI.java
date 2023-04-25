@@ -17,9 +17,12 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import com.mysql.cj.protocol.a.TextResultsetReader;
+
 public class FacultyGUI {
 
 	private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
+	private static final Font HEADING_FONT = new Font("Apple Casual", Font.BOLD, 36);
 	private static final Insets DEFAULT_INSETS = new Insets(20, 20, 20, 20);
 	private static final Border DEFAULT_PADDING = BorderFactory.createEmptyBorder(40, 40, 40, 40);
 
@@ -29,7 +32,12 @@ public class FacultyGUI {
 	private JButton addAbstract;
 	private JButton findMatches;
 	
+	private DataLayer dl;
+	
 	public FacultyGUI() {
+		// Initialize data layer
+		dl = new DataLayer("root", "Student-2023", "researchinterests");
+		
 		// Set up frame
 		frame = new JFrame();
 		frame.setSize(400, 800);
@@ -39,7 +47,7 @@ public class FacultyGUI {
 		home = new JPanel();
 
 		// Heading element
-		heading = new JLabel("Welcome, {name}", SwingConstants.CENTER);
+		heading = new JLabel("Faculty Home", SwingConstants.CENTER);
 		heading.setFont(DEFAULT_FONT);
 		heading.setBorder(DEFAULT_PADDING);
 		frame.add(heading);
@@ -89,13 +97,37 @@ public class FacultyGUI {
 		JDialog dialog = new JDialog(frame, Dialog.ModalityType.APPLICATION_MODAL);
 		dialog.setSize(400, 300);
 		dialog.setLocationRelativeTo(null);
-		dialog.setTitle("Add Abstract");
+		dialog.setTitle("Create Abstract");
+		dialog.setLayout(new BorderLayout());
 		
-		// Add components
-		dialog.add(new JLabel("blocking-modal"));
+		JTextField name = new JTextField();
+		name.setText("Abstract title");
+		name.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10), name.getBorder()));
+		dialog.add(name, BorderLayout.PAGE_START);
+		
+		JTextField body = new JTextField();
+		body.setText("Abstract body");
+		body.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10), body.getBorder()));
+		body.setAlignmentY(1);
+		dialog.add(body, BorderLayout.CENTER);
+		
+		JButton submit = new JButton("Submit");
+		submit.addActionListener(submit_abstract(name.getText(), body.getText()));
+		dialog.add(submit, BorderLayout.PAGE_END);
 		
 		// Finish up and show dialog
 		dialog.setVisible(true);
+	}
+	
+	private ActionListener submit_abstract(String name, String body) {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dl.insertFacultyAbstract(name, body, /*REMOVE THIS*/1/*REMOVE THIS*/);
+				JOptionPane.showMessageDialog(null, "Success", "Abstract successfully inserted.", JOptionPane.PLAIN_MESSAGE);
+			}
+		};
+		
 	}
 	
 	// Blocking dialog for finding matches
