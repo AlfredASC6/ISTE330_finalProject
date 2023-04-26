@@ -50,6 +50,7 @@ public class DataLayer {
    
    private static int id;
 	
+	/* This code was moved to the presentation layer since it uses GUIs DELETE LATER 
 	// create connection and prompt user for credentials
 	public DataLayer() {
 		loadDriver();
@@ -60,6 +61,7 @@ public class DataLayer {
 		loadConnection(username, password, database);
       System.out.println("Connected to database!");
 	}
+	*/
 	
 	// create connection with specified credentials
 	public DataLayer(String username, String password, String database) {
@@ -488,6 +490,7 @@ public class DataLayer {
 	  return id;
   }
 
+/* commenting out for now DELETE LATER 
    public static void main(String[] args) {
    	  System.out.println("Login");
    	    DataLayer dataLayer = new DataLayer(); // Create a new object. An Instantiation
@@ -526,5 +529,5 @@ public class DataLayer {
    	    	System.out.println(dataLayer.match(id, "G"));
    	    }
    	    scanner.close();
-   } // end of main method
+   } // end of main method */
 } // end of class
