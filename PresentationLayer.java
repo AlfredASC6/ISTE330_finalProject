@@ -12,27 +12,14 @@ Group Project HW3
 4/28/23
 */
 
-import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
-import com.mysql.cj.protocol.a.TextResultsetReader;
 
 public class PresentationLayer {
 
    private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
-	private static final Font HEADING_FONT = new Font("Apple Casual", Font.BOLD, 36);
-	private static final Insets DEFAULT_INSETS = new Insets(20, 20, 20, 20);
-	private static final Border DEFAULT_PADDING = BorderFactory.createEmptyBorder(40, 40, 40, 40);
-
-   // faculty GUI  
-	private JFrame frame;
-	private JPanel home;
-	private JLabel heading;
-	private JButton addAbstract;
-	private JButton findMatches;
 	
    // database variables 
    String dbName = new String();
@@ -52,13 +39,13 @@ public class PresentationLayer {
       dbPassword = JOptionPane.showInputDialog(null, "Password (default=student):", "Connect", JOptionPane.PLAIN_MESSAGE);
       dbName = JOptionPane.showInputDialog(null, "Database (default=researchInterests): ", "Connect", JOptionPane.PLAIN_MESSAGE);
       if (dbUsername.isBlank()) dbUsername = "root"; // assign default username
-      if (dbPassword.isBlank()) dbPassword = "student"; // assign default username
-      if (dbName.isBlank()) dbName = "researchInterests"; // assign default username
+      if (dbPassword.isBlank()) dbPassword = "Student-2023"; // assign default password
+      if (dbName.isBlank()) dbName = "researchinterests"; // assign default database
       
       dl = new DataLayer(dbUsername, dbPassword, dbName);
       
-      guestGUI();
-      //facultyGUI();
+      //guestGUI();
+      new FacultyGUI(dbUsername, dbPassword, dbName);
       
       // ASK USER IF THEY ARE A FACULTY, STUDENT, OR GUEST HERE 
       // set discriminator = f, s, or g depending on answer 
@@ -80,44 +67,6 @@ public class PresentationLayer {
       All will call insertPerson()
       They will also call insertFacultyMember, insertStudent, OR insertGuest  
    ***************/
-   
-   /*
-   * Sets up the Faculty Home GUI
-   * !!!!! This appears to need more buttons !!!!!!
-   */
-   public void facultyGUI(){
-      // Set up frame
-		frame = new JFrame();
-		frame.setSize(400, 800);
-		frame.setLocation(125, 75);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLayout(new GridLayout(2, 1));
-		home = new JPanel();
-
-		// Heading element
-		heading = new JLabel("Faculty Home", SwingConstants.CENTER);
-		heading.setFont(DEFAULT_FONT);
-		heading.setBorder(DEFAULT_PADDING);
-		frame.add(heading);
-		
-		// Add abstract button
-		addAbstract = new JButton("Add Abstract");
-		addAbstract.setFont(DEFAULT_FONT);
-		addAbstract.setPreferredSize(new Dimension(300, 50));
-		addAbstract.addActionListener(add_abstract_listener());
-		home.add(addAbstract);
-		
-		// Find matches button
-		findMatches = new JButton("Find Matches");
-		findMatches.setFont(DEFAULT_FONT);
-		findMatches.setPreferredSize(new Dimension(300, 50));
-		findMatches.addActionListener(find_matches_listener());
-		home.add(findMatches);
-
-		// Finish up and show frame
-		frame.add(home);
-		frame.setVisible(true);
-   }
    
    /*
    * Sets up the Student Home GUI
@@ -190,83 +139,6 @@ public class PresentationLayer {
 		frame.setVisible(true);
 
    }
-   
-   /** METHODS FROM FACULTY GUI BELOW **/
-   // Handle add abstract button
-	private ActionListener add_abstract_listener() {
-		return new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				add_abstract_dialog();
-			}
-		};
-	}
-	
-	// Handle find matches button
-	private ActionListener find_matches_listener() {
-		return new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				find_matches_dialog();
-			}
-		};
-	}
-	
-	// Blocking dialog for adding an abstract
-	private void add_abstract_dialog() {
-		// Setup dialog
-		JDialog dialog = new JDialog(frame, Dialog.ModalityType.APPLICATION_MODAL);
-		dialog.setSize(400, 300);
-		dialog.setLocationRelativeTo(null);
-		dialog.setTitle("Create Abstract");
-		dialog.setLayout(new BorderLayout());
-		
-		JTextField name = new JTextField();
-		name.setText("Abstract title");
-		name.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10), name.getBorder()));
-		dialog.add(name, BorderLayout.PAGE_START);
-		
-		JTextField body = new JTextField();
-		body.setText("Abstract body");
-		body.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10), body.getBorder()));
-		body.setAlignmentY(1);
-		dialog.add(body, BorderLayout.CENTER);
-		
-		JButton submit = new JButton("Submit");
-		submit.addActionListener(submit_abstract(name.getText(), body.getText()));
-		dialog.add(submit, BorderLayout.PAGE_END);
-		
-		// Finish up and show dialog
-		dialog.setVisible(true);
-	}
-	
-	private ActionListener submit_abstract(String name, String body) {
-		return new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dl.insertFacultyAbstract(name, body, /*REMOVE THIS*/1/*REMOVE THIS*/);
-				JOptionPane.showMessageDialog(null, "Success", "Abstract successfully inserted.", JOptionPane.PLAIN_MESSAGE);
-			}
-		};
-		
-	}
-	
-	// Blocking dialog for finding matches
-	private void find_matches_dialog() {
-		// Setup dialog
-		JDialog dialog = new JDialog(frame, Dialog.ModalityType.APPLICATION_MODAL);
-		dialog.setSize(400, 300);
-		dialog.setLocationRelativeTo(null);
-		dialog.setTitle("Find Matches");
-		
-		// Add components
-		dialog.add(new JLabel("blocking-modal"));
-		
-		// Finish up and show dialog
-		dialog.setVisible(true);
-	}
-
-   /** END FACULTY GUI METHODS **/
    
    public static void main(String [] args){
       System.out.println("ISTE330-01  Group Project HW3 Group 2  2023-04-28\n");

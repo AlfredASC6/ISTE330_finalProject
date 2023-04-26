@@ -33,8 +33,6 @@ import java.sql.CallableStatement;
 
 import java.util.*;
 
-import javax.swing.JOptionPane;
-
 public class DataLayer {
 	//encryption variables
    public static SecretKeySpec secretKey;
@@ -74,7 +72,7 @@ public class DataLayer {
 		try {
 			Class.forName(DEFAULT_DRIVER);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error loading driver | " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -84,7 +82,7 @@ public class DataLayer {
 		try {
 			connection = DriverManager.getConnection(URL_HEADING + database + "?serverTimezone=UTC", username, password);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error connecting to DB | " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -96,7 +94,7 @@ public class DataLayer {
 			ResultSet results = statement.executeQuery(query);
 			return results;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Query error | " + e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -291,6 +289,7 @@ public class DataLayer {
          System.out.println("Executed code: " + sql);
       }
       catch(Exception e){
+         e.printStackTrace();
          System.out.println("Error: " + e);
       }
    }//end of insertFacultyAbstract
