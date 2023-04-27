@@ -114,6 +114,7 @@ public class DataLayer {
             statement.setString(1, username);
             statement.setString(2, encryptedPass);
             statement.setString(3, discriminator);
+	    statement.executeUpdate();
          }
          else{
             sql = "INSERT INTO person (username, password, ID, discriminator) VALUES (?, ?, ?, ?)";
@@ -122,6 +123,7 @@ public class DataLayer {
             statement.setString(2, encryptedPass);
             statement.setInt(3, id);
             statement.setString(4, discriminator);
+	    statement.executeUpdate();
          }
          System.out.println("User profile has been inserted successfully");
       }
@@ -337,7 +339,7 @@ public class DataLayer {
       
       try{
          Statement stmt = connection.createStatement();
-         String sql = "SELECT ID FROM person WHERE username = " + guestUsername;
+         String sql = "SELECT ID FROM person WHERE username = '" + guestUsername + "'";
          ResultSet rs = stmt.executeQuery(sql);
          
          while(rs.next()){
