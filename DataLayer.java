@@ -87,6 +87,8 @@ public class DataLayer {
 		
 	    try {
 		connection = DriverManager.getConnection(URL_HEADING + database + "?serverTimezone=UTC", username, password);
+		System.out.println("Connected to database!");
+         	connected = true;
 	    } catch (SQLException e) {
 		System.out.println("Error connecting to DB | " + e.getMessage());
 		e.printStackTrace();
