@@ -32,6 +32,9 @@ public class GuestGUI {
    String phone = new String();
    int id;
    
+   // user input variables 
+   String keytopic = new String();
+   
    private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
    
    /*
@@ -154,19 +157,19 @@ public class GuestGUI {
       // insert key topic button
       insertKeyTopic = new JButton("Insert Key Topic");
       insertKeyTopic.setFont(DEFAULT_FONT);
-      //insertKeyTopic.addActionListener();
+      insertKeyTopic.addActionListener(insert_keytopic_listener());
       home.add(insertKeyTopic);
    		
       // delete key topic button
       deleteKeyTopic = new JButton("Delete Key Topic");
       deleteKeyTopic.setFont(DEFAULT_FONT);
-      //deleteKeyTopic.addActionListener();
+      deleteKeyTopic.addActionListener(delete_keytopic_listener());
       home.add(deleteKeyTopic);
          
       // find matched button 
       findMatches = new JButton("Find Matches");
       findMatches.setFont(DEFAULT_FONT);
-      //findMatches.addActionListener();
+      findMatches.addActionListener(find_matches_listener());
       home.add(findMatches);
          
       // exit button 
@@ -189,5 +192,72 @@ public class GuestGUI {
       frame.add(home);
       frame.setVisible(true);
    } // end displayGuestHome
+   
+   /*
+   * Handle insert key topic button
+   */
+	private ActionListener insert_keytopic_listener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enterKeytopicPanel();
+            dl.insertKeyTopic(id, keytopic, discriminator);
+			}
+		};
+	}
+   
+   /*
+   * Handle delete key topic button
+   */
+	private ActionListener delete_keytopic_listener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enterKeytopicPanel();
+            dl.deleteKeyTopic(keytopic, id, discriminator);
+			}
+		};
+	}
+   
+   /*
+   * Handle find matches button
+   */
+	private ActionListener find_matches_listener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String matches = dl.match(id, discriminator);
+            if(matches.equals("")){
+               JOptionPane.showMessageDialog(null, "No matches found");
+            }
+            else{
+               JOptionPane.showMessageDialog(null, matches);
+            }
+			}
+		};
+	}
+   
+   /*
+   * Display input frame for keytopic
+   */
+   public void enterKeytopicPanel(){
+      JPanel insertBox = new JPanel(new GridLayout(1,2));
+      
+      // label 
+      JLabel keytopicLbl = new JLabel("Keytopic (1-3 words): ");
+      
+      // field
+      JTextField keytopicTf = new JTextField("");
+      
+      // build JPanel
+      insertBox.add(keytopicLbl);
+      insertBox.add(keytopicTf);
+      
+      // display JPanel
+      JOptionPane.showMessageDialog(null, insertBox, "Enter the Key Topic", JOptionPane.INFORMATION_MESSAGE);
+
+      // get input 
+      keytopic = keytopicTf.getText();
+   }
    
 } // end class 
