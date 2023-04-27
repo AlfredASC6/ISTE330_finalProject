@@ -39,14 +39,14 @@ public class PresentationLayer {
       dbPassword = JOptionPane.showInputDialog(null, "Password (default=student):", "Connect", JOptionPane.PLAIN_MESSAGE);
       dbName = JOptionPane.showInputDialog(null, "Database (default=researchInterests): ", "Connect", JOptionPane.PLAIN_MESSAGE);
       if (dbUsername.isBlank()) dbUsername = "root"; // assign default username
-      if (dbPassword.isBlank()) dbPassword = "Student-2023"; // assign default password
+      if (dbPassword.isBlank()) dbPassword = "student"; // assign default password
       if (dbName.isBlank()) dbName = "researchinterests"; // assign default database
       
       
       
       ///// testing GUIs remove later /////
-      //new GuestGUI(dbUsername, dbPassword, dbName);
-      new FacultyGUI(dbUsername, dbPassword, dbName);
+      new GuestGUI(dbUsername, dbPassword, dbName);
+      //new FacultyGUI(dbUsername, dbPassword, dbName);
       
       
       
