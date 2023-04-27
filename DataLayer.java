@@ -435,7 +435,12 @@ public class DataLayer {
 	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
 	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
 	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n";
-	                
+			
+			matched += "Guest ID: " + rs.getInt("Guest_ID") + "\n";
+    	                matched += "Guest Name: " + rs.getString("Guest_First_Name") + " " + rs.getString("Guest_Last_Name") + "\n";
+    	                matched += "Guest Email: " + rs.getString("Guest_Email") + "\n";
+   	                matched += "Guest Phone: " + rs.getString("Guest_PhoneNum") + "\n";
+    	                matched += "Guest_Topic: " + rs.getString("Guest_Topic") + "\n";
 	            } else if (discriminator.equals("G")) {
 	                matched += "Faculty ID: " + rs.getInt("Faculty_ID") + "\n";
 	                matched += "Faculty Name: " + rs.getString("Faculty_First_Name") + " " + rs.getString("Faculty_Last_Name") + "\n";
