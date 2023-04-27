@@ -445,9 +445,12 @@ BEGIN
       faculty f ON f.facultyID = faculty_keytopics.facultyID
     INNER JOIN
       student s ON s.studentID = student_keytopics.studentID
+    INNER JOIN
+      guest_keytopics gkt ON gkt.keytopic = faculty_keytopics.keytopic
+    INNER JOIN
+      guest g ON g.guestID = gkt.guestID
     WHERE
-      guest_keytopics.guestID = varID;
-    END IF;
+      g.guestID = varID;
 END //
 DELIMITER ;
 
