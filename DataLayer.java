@@ -61,6 +61,10 @@ public class DataLayer {
 	}
 	*/
 	
+	//constructor 
+        public DataLayer() {
+        }
+	
 	// create connection with specified credentials
 	public DataLayer(String username, String password, String database) {
 		loadDriver();
@@ -68,7 +72,7 @@ public class DataLayer {
 	}
 	
 	// load jdbc driver
-	private void loadDriver() {
+	public void loadDriver() {
 		try {
 			Class.forName(DEFAULT_DRIVER);
 		} catch (ClassNotFoundException e) {
@@ -78,13 +82,17 @@ public class DataLayer {
 	}
 	
 	// begin connection with given credentials
-	private void loadConnection(String username, String password, String database) {
-		try {
-			connection = DriverManager.getConnection(URL_HEADING + database + "?serverTimezone=UTC", username, password);
-		} catch (SQLException e) {
-			System.out.println("Error connecting to DB | " + e.getMessage());
-			e.printStackTrace();
-		}
+	public boolean loadConnection(String username, String password, String database) {
+	    boolean connected = false; 
+		
+	    try {
+		connection = DriverManager.getConnection(URL_HEADING + database + "?serverTimezone=UTC", username, password);
+	    } catch (SQLException e) {
+		System.out.println("Error connecting to DB | " + e.getMessage());
+		e.printStackTrace();
+	    }
+		
+	    return connected;
 	}
 	
 	// execute query statement (SELECT)
