@@ -447,6 +447,7 @@ BEGIN
       student s ON s.studentID = student_keytopics.studentID
     WHERE
       guest_keytopics.guestID = varID;
+    END IF;
 END //
 DELIMITER ;
 
