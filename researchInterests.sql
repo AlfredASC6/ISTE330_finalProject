@@ -451,6 +451,7 @@ BEGIN
       guest g ON g.guestID = gkt.guestID
     WHERE
       g.guestID = varID;
+  END IF;
 END //
 DELIMITER ;
 
