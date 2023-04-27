@@ -379,8 +379,11 @@ CREATE PROCEDURE match_keytopic(
 BEGIN
   IF discriminator = 'F' THEN
     SELECT 
-      s.studentID, s.fName, s.lName, s.email,
-      student_keytopics.keytopic AS Student_Topic
+      student_keytopics.keytopic AS Student_Topic,
+      s.studentID AS Student_ID,
+      s.fName AS Student_First_Name, s.lName AS Student_Last_Name,
+      s.email AS Student_Email, s.phoneNum AS Student_PhoneNum,
+      s.departmentID AS Student_DepartmentID
     FROM 
       faculty_keytopics
     INNER JOIN 
@@ -394,8 +397,14 @@ BEGIN
 
   ELSEIF discriminator = 'S' THEN
     SELECT 
-      f.facultyID, f.fName, f.lName, f.email,
-      faculty_keytopics.keytopic AS Faculty_Topic
+      faculty_keytopics.keytopic AS Faculty_Topic,
+      guest_keytopics.keytopic AS Guest_Topic,
+      f.fName AS Faculty_First_Name, f.lName AS Faculty_Last_Name,
+      f.email AS Faculty_Email, f.phoneNum AS Faculty_PhoneNum,
+      f.officePhoneNum AS Faculty_OfficePhoneNum, f.officeNum AS Faculty_OfficeNum,
+      f.buildingCode AS Faculty_BuildingCode, f.departmentID AS Faculty_DepartmentID,
+      g.fName AS Guest_First_Name, g.lName AS Guest_Last_Name,
+      g.email AS Guest_Email, g.phoneNum AS Guest_PhoneNum
     FROM 
       faculty_keytopics
     INNER JOIN 
@@ -403,16 +412,29 @@ BEGIN
     ON 
       faculty_keytopics.keytopic = student_keytopics.keytopic
     INNER JOIN
-      faculty f ON f.facultyID = faculty_keytopics.facultyID
+      faculty AS f ON f.facultyID = faculty_keytopics.facultyID
+    INNER JOIN
+      guest_keytopics
+    ON
+      faculty_keytopics.keytopic = guest_keytopics.keytopic
+    INNER JOIN
+      guest AS g ON g.guestID = guest_keytopics.guestID
     WHERE
       student_keytopics.studentID = varID;
 
   ELSEIF discriminator = 'G' THEN
     SELECT 
-      f.facultyID, f.fName, f.lName, f.email,
       faculty_keytopics.keytopic AS Faculty_Topic,
-      s.studentID, s.fName, s.lName, s.email,
-      student_keytopics.keytopic AS Student_Topic
+      student_keytopics.keytopic AS Student_Topic,
+      f.facultyID AS Faculty_ID,
+      f.fName AS Faculty_First_Name, f.lName AS Faculty_Last_Name,
+      f.email AS Faculty_Email, f.phoneNum AS Faculty_PhoneNum,
+      f.officePhoneNum AS Faculty_OfficePhoneNum, f.officeNum AS Faculty_OfficeNum,
+      f.buildingCode AS Faculty_BuildingCode, f.departmentID AS Faculty_DepartmentID,
+      s.studentID AS Student_ID,
+      s.fName AS Student_First_Name, s.lName AS Student_Last_Name,
+      s.email AS Student_Email, s.phoneNum AS Student_PhoneNum,
+      s.departmentID AS Student_DepartmentID
     FROM 
       faculty_keytopics
     INNER JOIN 
@@ -423,13 +445,8 @@ BEGIN
       faculty f ON f.facultyID = faculty_keytopics.facultyID
     INNER JOIN
       student s ON s.studentID = student_keytopics.studentID
-    INNER JOIN
-      guest_keytopics
-    ON
-      guest_keytopics.keytopic = faculty_keytopics.keytopic
     WHERE
       guest_keytopics.guestID = varID;
-  END IF;
 END //
 DELIMITER ;
 
