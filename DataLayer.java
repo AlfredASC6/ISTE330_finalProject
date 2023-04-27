@@ -533,6 +533,40 @@ public class DataLayer {
   public static int getId() {
 	  return id;
   }
+  
+  //check Username
+  public boolean checkUsername(String username) {
+      try {
+        CallableStatement statement = connection.prepareCall("{call checkUsername(?)}");
+        statement.setString(1, username);
+        ResultSet results = statement.executeQuery();
+        if (results.next()) {
+            return true;
+        }
+      } catch (SQLException e) {
+        System.out.println("Error checking username | " + e.getMessage());
+        e.printStackTrace();
+      }
+    return false;
+  }
+   
+  //check password
+  public boolean checkPasswd(String username, String password) {
+      try {
+        CallableStatement statement = connection.prepareCall("{call checkPasswd(?, ?)}");
+        statement.setString(1, username);
+        statement.setString(2, password);
+        ResultSet results = statement.executeQuery();
+        if (results.next()) {
+            return true;
+        }
+    } catch (SQLException e) {
+        System.out.println("Error checking password | " + e.getMessage());
+        e.printStackTrace();
+    }
+    return false;
+   }
+
 
 /* commenting out for now DELETE LATER 
    public static void main(String[] args) {
