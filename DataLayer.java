@@ -419,23 +419,38 @@ public class DataLayer {
 	        // print matching person's values
 	        while (rs.next()) {
 	            if (discriminator.equals("F")) {
-	                matched += "Student ID: " + rs.getInt("studentID") + "\n";;
-	                matched += "Student Name: " + rs.getString("fName") + " " + rs.getString("lName") + "\n";;
-	                matched += "Student Email: " + rs.getString("email") + "\n";;
+	                matched += "Student ID: " + rs.getInt("Student_ID") + "\n";
+	                matched += "Student Name: " + rs.getString("Student_First_Name") + " " + rs.getString("Student_Last_Name") + "\n";
+	                matched += "Student Email: " + rs.getString("Student_Email") + "\n";
+	                matched += "Student Phone: " + rs.getString("Student_PhoneNum") + "\n";
+	                matched += "Student Department ID: " + rs.getString("Student_DepartmentID") + "\n";
 	                matched += "Student_Topic: " + rs.getString("Student_Topic") + "\n";
 	            } else if (discriminator.equals("S")) {
-	                matched += "Faculty ID: " + rs.getInt("facultyID") + "\n";;
-	                matched += "Faculty Name: " + rs.getString("fName") + " " + rs.getString("lName") + "\n";
-	                matched += "Faculty Email: " + rs.getString("email") + "\n";
+	                matched += "Faculty ID: " + rs.getInt("Faculty_ID") + "\n";
+	                matched += "Faculty Name: " + rs.getString("Faculty_First_Name") + " " + rs.getString("Faculty_Last_Name") + "\n";
+	                matched += "Faculty Email: " + rs.getString("Faculty_Email") + "\n";
+	                matched += "Faculty Phone: " + rs.getString("Faculty_PhoneNum") + "\n";
+	                matched += "Faculty Office Phone: " + rs.getString("Faculty_OfficePhoneNum") + "\n";
+	                matched += "Faculty Office Number: " + rs.getString("Faculty_OfficeNum") + "\n";
+	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
+	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
 	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n";
+	                
 	            } else if (discriminator.equals("G")) {
-	                matched += "Faculty ID: " + rs.getInt("facultyID") + "\n";
-	                matched += "Faculty Name: " + rs.getString("fName") + " " + rs.getString("lName") + "\n";
-	                matched += "Faculty Email: " + rs.getString("email") + "\n";
-	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n" + "\n";
-	                matched += "Student ID: " + rs.getInt("studentID") + "\n";
-	                matched += "Student Name: " + rs.getString("fName") + " " + rs.getString("lName") + "\n";
-	                matched += "Student Email: " + rs.getString("email") + "\n";
+	                matched += "Faculty ID: " + rs.getInt("Faculty_ID") + "\n";
+	                matched += "Faculty Name: " + rs.getString("Faculty_First_Name") + " " + rs.getString("Faculty_Last_Name") + "\n";
+	                matched += "Faculty Email: " + rs.getString("Faculty_Email") + "\n";
+	                matched += "Faculty Phone: " + rs.getString("Faculty_PhoneNum") + "\n";
+	                matched += "Faculty Office Phone: " + rs.getString("Faculty_OfficePhoneNum") + "\n";
+	                matched += "Faculty Office Number: " + rs.getString("Faculty_OfficeNum") + "\n";
+	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
+	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
+	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n\n";
+	                matched += "Student ID: " + rs.getInt("Student_ID") + "\n";
+	                matched += "Student Name: " + rs.getString("Student_First_Name") + " " + rs.getString("Student_Last_Name") + "\n";
+	                matched += "Student Email: " + rs.getString("Student_Email") + "\n";
+	                matched += "Student Phone: " + rs.getString("Student_PhoneNum") + "\n";
+	                matched += "Student Department ID: " + rs.getString("Student_DepartmentID") + "\n";
 	                matched += "Student_Topic: " + rs.getString("Student_Topic") + "\n";
 	            }
 	        }
