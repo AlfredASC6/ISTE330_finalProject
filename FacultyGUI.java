@@ -169,8 +169,8 @@ public class FacultyGUI {
 		// Retrieve abstract
 		String abstractID = JOptionPane.showInputDialog(null, "Enter the ID of the abstract to edit:", "Enter ID", 0);
 		int id = Integer.parseInt(abstractID);
-		String abstractText = dl.getAbstract(ID, id);
-		String abstractTitleText = "[title]"; //NEEDS dl.getAbstractTitle(ID, id)
+		String abstractTitleText = "Old title: "; //NEEDS dl.getAbstractTitle(ID, id)
+		String abstractText = "Old abstract: " + dl.getAbstract(ID, id);
 
 		abstractName = new JTextField();
 		abstractName.setText(abstractTitleText);
@@ -197,7 +197,7 @@ public class FacultyGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dl.updateFacultyAbstract(oldName, abstractName.getText(), oldBody, abstractBody.getText());
-				JOptionPane.showMessageDialog(null, "Success", "Abstract successfully updated.", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Abstract successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
 			}
 		};
 	}
@@ -217,16 +217,18 @@ public class FacultyGUI {
 		// Retrieve abstract
 		String abstractTitle = JOptionPane.showInputDialog(null, "Enter the title of the abstract to delete:", "Enter Title", 0);
 		// Confirm delete
-		int choice = JOptionPane.showConfirmDialog(null, "Delete the abstract '" + abstractTitle + "'?", "Delete Abstract", JOptionPane.YES_NO_OPTION);
-		if (choice == JOptionPane.YES_OPTION) {
-			delete_abstract(abstractTitle, ID);
+		if (abstractTitle != null && !abstractTitle.isBlank()) {
+			int choice = JOptionPane.showConfirmDialog(null, "Delete the abstract '" + abstractTitle + "'?", "Delete Abstract", JOptionPane.YES_NO_OPTION);
+			if (choice == JOptionPane.YES_OPTION) {
+				delete_abstract(abstractTitle, ID);
+			}
 		}
 	}
 
 	// Perform delete call
 	private void delete_abstract(String title, int id) {
 		dl.deleteFacultyAbstract(title, id);
-		JOptionPane.showMessageDialog(null, "Success", "Abstract successfully deleted.", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Abstract successfully deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }

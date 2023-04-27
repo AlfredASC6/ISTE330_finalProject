@@ -327,6 +327,7 @@ public class DataLayer {
    //start of updateFacultyAbstract
    public void updateFacultyAbstract(String oldTitle, String newTitle, String oldText, String newAbstract){
       try{
+    	  System.out.println("Old title: " + oldTitle + "\nNew title: " + newTitle + "\nOld text: " + oldText + "\nNew abstract: " + newAbstract);
          String sql = "{CALL update_abstract(?, ?, ?, ?)}";
          PreparedStatement stmt = connection.prepareStatement(sql);
          // set parameters
