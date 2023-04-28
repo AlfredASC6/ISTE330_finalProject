@@ -348,12 +348,12 @@ public class DataLayer {
       }
    }//end of updateFacultyAbstract
 
-   public int getGuestId(String guestUsername){
+   public int getUserId(String username){
       int id = -1;
       
       try{
          Statement stmt = connection.createStatement();
-         String sql = "SELECT ID FROM person WHERE username = '" + guestUsername + "'";
+         String sql = "SELECT ID FROM person WHERE username = '" + username + "'";
          ResultSet rs = stmt.executeQuery(sql);
          
          while(rs.next()){
@@ -365,7 +365,7 @@ public class DataLayer {
       }
       
       return id;
-   }// end getGuestId
+   }// end getUserId
 
    //encryption stuff where we use SHA-256
    public static void setKey(final String myKey){
