@@ -529,4 +529,21 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS get_faculty_ids;
+DELIMITER //
+CREATE PROCEDURE get_faculty_ids(
+	IN keytopic VARCHAR(50)
+)
+BEGIN
+	SELECT DISTINCT faculty_abstract.facultyID
+	FROM faculty_abstract
+	JOIN abstract ON abstract.abstractID = faculty_abstract.abstractID
+	WHERE abstract.title LIKE CONCAT('%', keytopic, '%') OR abstract.abstract LIKE CONCAT('%', keytopic, '%')
+	UNION
+		SELECT DISTINCT faculty_keytopics.facultyID
+		FROM faculty_keytopics
+		WHERE faculty_keytopics.keytopic = keytopic;
+END //
+DELIMITER ;
+
 SHOW PROCEDURE STATUS WHERE db Like "research%"; 
