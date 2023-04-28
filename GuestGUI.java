@@ -121,13 +121,17 @@ public class GuestGUI {
       
       // insert into db
       // check if username is valid 
-      boolean validUsername = true;
+      boolean validUsername = dl.checkUsername(username);
       
       if(validUsername){
          dl.insertPerson(username, password, 0, discriminator); // 0 is a placeholder for id, guests are given an id
          id = dl.getGuestId(username);
          dl.insertGuest(id, fname, lname, company, email, phone);
          this.displayGuestHome();
+      }
+      else{
+         JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
+         this.registerGuest();
       }
    }
    
