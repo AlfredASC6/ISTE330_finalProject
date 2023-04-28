@@ -632,11 +632,12 @@ public class DataLayer {
   //check password
   public boolean checkPasswd(String username, String password) {
       boolean check = false;
+      String encryptKey = "turtles";
       
       try {
         CallableStatement statement = connection.prepareCall("{call checkPasswd(?, ?, ?)}");
         statement.setString(1, username);
-        statement.setString(2, password);
+        statement.setString(2, encrypt(password, encryptKey));
         statement.registerOutParameter(3, Types.INTEGER);
         statement.executeQuery();
         int result = statement.getInt(3);
@@ -649,4 +650,5 @@ public class DataLayer {
     }
     return check;
    }
+
 } // end of class
