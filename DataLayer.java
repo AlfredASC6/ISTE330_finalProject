@@ -5,9 +5,7 @@ Franco, Alfred
 Conte, Jacob
 Foley, Ben
 Chuhi, Reg
-
 Group 2
-
 ISTE 330 
 Group Project Week 2 HW
 4/14/23
@@ -30,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.CallableStatement;
+import java.sql.Types;
 
 import java.util.*;
 
@@ -149,23 +148,25 @@ public class DataLayer {
     	  // call stored procedures
          String procedureCall = "";
          if(discriminator.equals("F")){
-            procedureCall = "{call delete_faculty_keytopic(?,?)}";
+            procedureCall = "{call delete_faculty_keytopic(?,?,?)}";
          }
          else if(discriminator.equals("S")){
-            procedureCall = "{call delete_student_keytopic(?,?)}";
+            procedureCall = "{call delete_student_keytopic(?,?,?)}";
          }
          else if(discriminator.equals("G")){
-            procedureCall = "{call delete_guest_keytopic(?,?)}";
+            procedureCall = "{call delete_guest_keytopic(?,?,?)}";
          }
    
          CallableStatement statement = connection.prepareCall(procedureCall);
          //set parameters
          statement.setString(1, topic);
          statement.setInt(2, ID);
-         int result = statement.executeUpdate();
+         statement.registerOutParameter(3, Types.INTEGER);
+         statement.executeUpdate();
+         int rowsAffected = statement.getInt(3);
    
-         System.out.println("Your keytopic has been successfully deleted");
-         return result;
+         System.out.println("The delete statement affected " + rowsAffected + " row(s)");
+         return rowsAffected;
        } catch (SQLException e) {
            // handle any errors
            e.printStackTrace();
@@ -543,10 +544,12 @@ public class DataLayer {
   //check Username
   public boolean checkUsername(String username) {
       try {
-        CallableStatement statement = connection.prepareCall("{call checkUsername(?)}");
+        CallableStatement statement = connection.prepareCall("{call checkUsername(?, ?)}");
         statement.setString(1, username);
-        ResultSet results = statement.executeQuery();
-        if (results.next()) {
+        statement.registerOutParameter(2, Types.INTEGER);
+        statement.executeQuery();
+        int result = statement.getInt(2);
+        if (result == 1) {
             return true;
         }
       } catch (SQLException e) {
@@ -559,11 +562,13 @@ public class DataLayer {
   //check password
   public boolean checkPasswd(String username, String password) {
       try {
-        CallableStatement statement = connection.prepareCall("{call checkPasswd(?, ?)}");
+        CallableStatement statement = connection.prepareCall("{call checkPasswd(?, ?, ?)}");
         statement.setString(1, username);
         statement.setString(2, password);
-        ResultSet results = statement.executeQuery();
-        if (results.next()) {
+        statement.registerOutParameter(3, Types.INTEGER);
+        statement.executeQuery();
+        int result = statement.getInt(2);
+        if (result == 1) {
             return true;
         }
     } catch (SQLException e) {
