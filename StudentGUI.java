@@ -14,104 +14,263 @@ Group Project HW3
 
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
+
 public class StudentGUI {
-	public static DataLayer datal;
-	public StudentGUI(DataLayer dl) {
-		datal = dl;
-		JFrame frame = new JFrame("Login and Signup");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 200);
 
-		JPanel panel = new JPanel(new GridLayout(2, 1));
+   private DataLayer dl = new DataLayer();
+   String discriminator = "S";
+   
+   // user info variables 
+   String username = new String();
+   String password = new String();
+   String fname = new String();
+   String lname = new String();
+   String major = new String();
+   int id;
+   
+   // user input variables 
+   String keytopic = new String();
+   
+   private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
+   
+   /*
+   * Constructor when returning user logs in
+   */
+   public StudentGUI(String dbUsername, String dbPassword, String dbName, String username){
+      // create data layer & connect to db 
+      dl.loadDriver();
+      boolean connected = dl.loadConnection(dbUsername, dbPassword, dbName);
+      
+      if(!connected){
+         JOptionPane.showMessageDialog(null,"Unable to connect to data source\nPlease re-run the program");
+      }
+      else{
+         //id = dl.getStudentId(username);
+         this.displayStudentHome();
+      } // end else
+   } // end constructor 
+   
+   /*
+   * Constructor when user is registering 
+   */
+   public StudentGUI(String dbUsername, String dbPassword, String dbName){
+      // create data layer & connect to db 
+      dl.loadDriver();
+      boolean connected = dl.loadConnection(dbUsername, dbPassword, dbName);
+      
+      if(!connected){
+         JOptionPane.showMessageDialog(null,"Unable to connect to data source\nPlease re-run the program");
+      }
+      else{
+         this.registerStudent();
+      } // end else
+   } // end constructor 
+   
+   public void registerStudent() {
+	    JPanel registerBox = new JPanel(new GridLayout(6, 2));
 
-		JButton loginButton = new JButton("Login");
-		loginButton.addActionListener(e -> showLoginForm());
-		panel.add(loginButton);
+	    // labels
+	    JLabel usernameLbl = new JLabel("Username: ");
+	    JLabel passwordLbl = new JLabel("Password: ");
+	    JLabel fnameLbl = new JLabel("First Name: ");
+	    JLabel lnameLbl = new JLabel("Last Name: ");
+	    JLabel emailLbl = new JLabel("Email: ");
+	    JLabel phoneNumLbl = new JLabel("Phone Number: ");
 
-		JButton signUpButton = new JButton("Sign Up");
-		signUpButton.addActionListener(e -> showSignUpForm());
-		panel.add(signUpButton);
+	    // fields
+	    JTextField usernameTf = new JTextField("");
+	    JTextField passwordTf = new JPasswordField("");
+	    JTextField fnameTf = new JTextField("");
+	    JTextField lnameTf = new JTextField("");
+	    JTextField emailTf = new JTextField("");
+	    JTextField phoneNumTf = new JTextField("");
+
+	    // build JPanel
+	    registerBox.add(usernameLbl);
+	    registerBox.add(usernameTf);
+	    registerBox.add(passwordLbl);
+	    registerBox.add(passwordTf);
+	    registerBox.add(fnameLbl);
+	    registerBox.add(fnameTf);
+	    registerBox.add(lnameLbl);
+	    registerBox.add(lnameTf);
+	    registerBox.add(emailLbl);
+	    registerBox.add(emailTf);
+	    registerBox.add(phoneNumLbl);
+	    registerBox.add(phoneNumTf);
+
+	    // display JPanel
+	    JOptionPane.showMessageDialog(null, registerBox, "Register New Student", JOptionPane.INFORMATION_MESSAGE);
+
+	    // get input
+	    username = usernameTf.getText();
+	    password = passwordTf.getText();
+	    fname = fnameTf.getText();
+	    lname = lnameTf.getText();
+	    String email = emailTf.getText();
+	    String phoneNum = phoneNumTf.getText();
+      
+      // insert into db
+      // check if username is valid 
+	    boolean validUsername = dl.checkUsername(username);
+	    
+	    if (validUsername) {
+	        dl.insertPerson(username, password, 0, discriminator);
+	        int newId = 0;
+			if (newId != -1) {
+	            id = newId;
+	            dl.insertStudent(id, fname, lname, email, phoneNum, newId);
+	            this.displayStudentHome();
+	        } else {
+	            JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
+	            this.registerStudent();
+	        }
+	    } else {
+	        JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
+	        this.registerStudent();
+	    }
+	}
+
+   public void displayStudentHome(){
+        // set up variables
+	   JFrame frame;
+	   JPanel home;
+	   JLabel heading;
+	   JButton insertKeyTopic;
+//	   JButton deleteKeyTopic;
+	   JButton findMatches;
+	   JButton exit;
+	   // Set up frame
+	   frame = new JFrame("Student Home: Choose an Action");
+	   frame.setSize(600, 400);
+	   frame.setLocation(125, 75);
+	   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	   home = new JPanel();
+	   home.setLayout(new GridLayout(3, 1));
+
+	   // Heading element
+	   heading = new JLabel("Student Home", SwingConstants.CENTER);
+	   heading.setFont(DEFAULT_FONT);
+	   frame.add(heading);
+	 	
+	   // insert key topic button
+	   insertKeyTopic = new JButton("Insert Key Topic");
+	   insertKeyTopic.setFont(DEFAULT_FONT);
+	   insertKeyTopic.addActionListener(insert_keytopic_listener());
+	   home.add(insertKeyTopic);
+	 	
+	   // delete key topic button
+//	   deleteKeyTopic = new JButton("Delete Key Topic");
+//	   deleteKeyTopic.setFont(DEFAULT_FONT);
+//	   deleteKeyTopic.addActionListener(delete_keytopic_listener());
+//	   home.add(deleteKeyTopic);
+	      
+	   // find matched button 
+	   findMatches = new JButton("Find Matches");
+	   findMatches.setFont(DEFAULT_FONT);
+	   findMatches.addActionListener(find_matches_listener());
+	   home.add(findMatches);
+	      
+	   // exit button 
+	   exit = new JButton("Exit");
+	   exit.setFont(DEFAULT_FONT);
+	   java.util.Date now = new java.util.Date();
+	   exit.addActionListener(new ActionListener(){
+	      public void actionPerformed(ActionEvent ae) {
+	         JOptionPane.showMessageDialog(null, "Good-Bye!"+
+	            "\nEnd of program\nTerminated at -> "+now,
+	            "EOJ",
+	            JOptionPane.PLAIN_MESSAGE);
+	         System.out.println("\nEnd of program\nTerminated at -> "+now);
+	         System.exit(0);
+	      }
+	   });
+	   home.add(exit);
+
+	   // Finish up and show frame
+	   frame.add(home);
+	   frame.setVisible(true);
+	   frame.add(home);
+	   frame.setVisible(true);
+	   } // end displayStudentHome
+
+	   /*
+	    * Handle insert key topic button
+	    */
+	   private ActionListener insert_keytopic_listener() {
+	       return new ActionListener() {
+	           @Override
+	           public void actionPerformed(ActionEvent e) {
+	               enterKeytopicPanel();
+	               int result = dl.insertKeyTopic(id, keytopic, discriminator);
+	               if (result == -1) {
+	                   JOptionPane.showMessageDialog(null, "An error occured! The key topic could not be inserted.");
+	               } else {
+	                   JOptionPane.showMessageDialog(null, "The key topic was inserted!");
+	               }
+	           }
+	       };
+	   }
+
+	   /*
+	    * Handle delete key topic button
+	    
+	   private ActionListener delete_keytopic_listener() {
+	       return new ActionListener() {
+	           @Override
+	           public void actionPerformed(ActionEvent e) {
+	               enterKeytopicPanel();
+	               int rowsAffected = dl.deleteKeyTopic(keytopic, id, discriminator);
+	               if (rowsAffected == 0) {
+	                   JOptionPane.showMessageDialog(null, "The key topic you tried to delete did not exist.\nNo rows were affected.");
+	               } else if (rowsAffected == -1) {
+	                   JOptionPane.showMessageDialog(null, "An error occured! No key topic was deleted.");
+	               } else {
+	                   JOptionPane.showMessageDialog(null, "The key topic was deleted!");
+	               }
+	           }
+	       };
+	   }
+		*/
 	   
-		frame.add(panel);
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-	}
+	   /*
+	    * Handle find matches button
+	    */
+	   private ActionListener find_matches_listener() {
+	       return new ActionListener() {
+	           @Override
+	           public void actionPerformed(ActionEvent e) {
+	               String matches = dl.match(id, discriminator);
+	               if (matches.equals("")) {
+	                   JOptionPane.showMessageDialog(null, "No matches found");
+	               } else {
+	                   JOptionPane.showMessageDialog(null, matches);
+	               }
+	           }
+	       };
+	   }
+	   /*
+	    * Display input frame for keytopic
+	    */
+	   public void enterKeytopicPanel() {
+	       JPanel insertBox = new JPanel(new GridLayout(1, 2));
 
-	private void showSignUpForm() {
-		JPanel signUpPanel = new JPanel(new GridLayout(7, 2));
-		JLabel lblStudentID = new JLabel("Student ID: ");
-		JLabel lblFirstName = new JLabel("First Name: ");
-		JLabel lblLastName = new JLabel("Last Name: ");
-    	JLabel lblEmail = new JLabel("Email: ");
-    	JLabel lblPhoneNumber = new JLabel("Phone Number: ");
-    	JLabel lblDepartmentID = new JLabel("Department ID: ");
+	       // label
+	       JLabel keytopicLbl = new JLabel("Keytopic (1-3 words): ");
 
-    	JTextField tfStudentID = new JTextField();
-    	JTextField tfFirstName = new JTextField();
-    	JTextField tfLastName = new JTextField();
-    	JTextField tfEmail = new JTextField();
-    	JTextField tfPhoneNumber = new JTextField();
-    	JTextField tfDepartmentID = new JTextField();
+	       // field
+	       JTextField keytopicTf = new JTextField("");
 
-    	signUpPanel.add(lblStudentID);
-    	signUpPanel.add(tfStudentID);
-    	signUpPanel.add(lblFirstName);
-    	signUpPanel.add(tfFirstName);
-    	signUpPanel.add(lblLastName);
-    	signUpPanel.add(tfLastName);
-    	signUpPanel.add(lblEmail);
-    	signUpPanel.add(tfEmail);
-    	signUpPanel.add(lblPhoneNumber);
-    	signUpPanel.add(tfPhoneNumber);
-    	signUpPanel.add(lblDepartmentID);
-    	signUpPanel.add(tfDepartmentID);
-    
-    	int studentID = Integer.parseInt(tfStudentID.getText());
-    	String fName = tfFirstName.getText();
-    	String lName = tfLastName.getText();
-    	String email = tfEmail.getText();
-    	String phoneNum = tfPhoneNumber.getText();
-    	int departmentId = Integer.parseInt(tfDepartmentID.getText());
-    
-    	datal.insertStudent(studentID, fName, lName, email, phoneNum, departmentId);
+	       // build JPanel
+	       insertBox.add(keytopicLbl);
+	       insertBox.add(keytopicTf);
 
-    	JOptionPane.showMessageDialog(null, signUpPanel,
-            "Sign Up", JOptionPane.PLAIN_MESSAGE);
-    	// Save sign-up details and create a new account here
-    	showInterestSearch();
-	}
+	       // display JPanel
+	       JOptionPane.showMessageDialog(null, insertBox, "Enter the Key Topic", JOptionPane.INFORMATION_MESSAGE);
 
-	private void showLoginForm() {
-    	JPanel loginPanel = new JPanel(new GridLayout(3, 2));
-    	JLabel lblUsername = new JLabel("Username: ");
-    	JLabel lblPassword = new JLabel("Password: ");
-    	JTextField tfUsername = new JTextField();
-    	JPasswordField pfPassword = new JPasswordField();
-    	loginPanel.add(lblUsername);
-    	loginPanel.add(tfUsername);
-    	loginPanel.add(lblPassword);
-    	loginPanel.add(pfPassword);
+	       // get input
+	       keytopic = keytopicTf.getText();
+	   }
 
-    	JOptionPane.showMessageDialog(null, loginPanel,
-    			"Login", JOptionPane.PLAIN_MESSAGE);
-    	// Validate login credentials here
-    	showInterestSearch();
-	}
-
-	private void showInterestSearch() {
-		JPanel searchPanel = new JPanel(new GridLayout(2, 1));
-		JTextField tfSearch = new JTextField();
-		searchPanel.add(tfSearch);
-
-		//String discriminator = tfSearch.getText();
-		int userId = 1; // Replace this with the logged-in user's ID
-		
-		String matchedResults = datal.match(userId, "S");
-		JOptionPane.showMessageDialog(null, matchedResults,
-				"Matching Results", JOptionPane.INFORMATION_MESSAGE);
-
-	}
-}
+} // end class
