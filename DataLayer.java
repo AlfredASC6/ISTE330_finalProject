@@ -531,8 +531,9 @@ public class DataLayer {
       System.out.println(matchingFaculty);
       return matchingFaculty;
       
-   } // end getMatchingFacultyIds
-
+   } // end getMatchingFaculty
+	
+	/* following methods are not used
   //class that gets an abstract from the database 
   public String getAbstract(int facultyID, int abstractID){
      String abstractTopic = "";
@@ -605,6 +606,8 @@ public class DataLayer {
   public static int getId() {
 	  return id;
   }
+  
+  ***************/
   
   //check Username
   public boolean checkUsername(String username) {
