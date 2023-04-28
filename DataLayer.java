@@ -437,13 +437,7 @@ public class DataLayer {
 	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
 	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
 	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n";
-			
-			matched += "Guest ID: " + rs.getInt("Guest_ID") + "\n";
-    	                matched += "Guest Name: " + rs.getString("Guest_First_Name") + " " + rs.getString("Guest_Last_Name") + "\n";
-    	                matched += "Guest Email: " + rs.getString("Guest_Email") + "\n";
-   	                matched += "Guest Phone: " + rs.getString("Guest_PhoneNum") + "\n";
-    	                matched += "Guest_Topic: " + rs.getString("Guest_Topic") + "\n";
-	            } else if (discriminator.equals("G")) {
+	            }else if (discriminator.equals("G")) {
 	                matched += "Faculty ID: " + rs.getInt("Faculty_ID") + "\n";
 	                matched += "Faculty Name: " + rs.getString("Faculty_First_Name") + " " + rs.getString("Faculty_Last_Name") + "\n";
 	                matched += "Faculty Email: " + rs.getString("Faculty_Email") + "\n";
@@ -452,13 +446,26 @@ public class DataLayer {
 	                matched += "Faculty Office Number: " + rs.getString("Faculty_OfficeNum") + "\n";
 	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
 	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
-	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n\n";
-	                matched += "Student ID: " + rs.getInt("Student_ID") + "\n";
-	                matched += "Student Name: " + rs.getString("Student_First_Name") + " " + rs.getString("Student_Last_Name") + "\n";
-	                matched += "Student Email: " + rs.getString("Student_Email") + "\n";
-	                matched += "Student Phone: " + rs.getString("Student_PhoneNum") + "\n";
-	                matched += "Student Department ID: " + rs.getString("Student_DepartmentID") + "\n";
-	                matched += "Student_Topic: " + rs.getString("Student_Topic") + "\n";
+	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n";
+	            }
+	        }
+	        if (cs.getMoreResults()) {
+	            rs = cs.getResultSet();
+	            while (rs.next()) {
+	                if (discriminator.equals("S")) {
+	                    matched += "Guest ID: " + rs.getInt("Guest_ID") + "\n";
+	                    matched += "Guest Name: " + rs.getString("Guest_First_Name") + " " + rs.getString("Guest_Last_Name") + "\n";
+	                    matched += "Guest Email: " + rs.getString("Guest_Email") + "\n";
+	                    matched += "Guest Phone: " + rs.getString("Guest_PhoneNum") + "\n";
+	                    matched += "Guest_Topic: " + rs.getString("Guest_Topic") + "\n";
+	                } else if (discriminator.equals("G")) {
+	                    matched += "Student ID: " + rs.getInt("Student_ID") + "\n";
+	                    matched += "Student Name: " + rs.getString("Student_First_Name") + " " + rs.getString("Student_Last_Name") + "\n";
+	                    matched += "Student Email: " + rs.getString("Student_Email") + "\n";
+	                    matched += "Student Phone: " + rs.getString("Student_PhoneNum") + "\n";
+	                    matched += "Student Department ID: " + rs.getString("Student_DepartmentID") + "\n";
+	                    matched += "Student_Topic: " + rs.getString("Student_Topic") + "\n";
+	                }
 	            }
 	        }
 	    } catch (Exception e) {
