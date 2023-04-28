@@ -200,11 +200,14 @@ DROP PROCEDURE IF EXISTS delete_faculty_keytopic;
 DELIMITER //
 CREATE PROCEDURE delete_faculty_keytopic(
 IN varkeytopic VARCHAR(50),
-IN varfacultyID INT
+IN varfacultyID INT,
+OUT rowsAffected INT
 )
 BEGIN
     DELETE FROM faculty_keytopics
     WHERE keytopic = varkeytopic AND facultyID = varfacultyID;
+    
+    SELECT ROW_COUNT() INTO rowsAffected;
 END //
 DELIMITER ;
 
@@ -240,11 +243,14 @@ DROP PROCEDURE IF EXISTS delete_student_keytopic;
 DELIMITER //
 CREATE PROCEDURE delete_student_keytopic(
 IN varkeytopic VARCHAR(50),
-IN varstudentID INT
+IN varstudentID INT,
+OUT rowsAffected INT
 )
 BEGIN
     DELETE FROM student_keytopics
     WHERE keytopic = varkeytopic AND studentID = varstudentID;
+    
+    SELECT ROW_COUNT() INTO rowsAffected;
 END //
 DELIMITER ;
 
@@ -280,11 +286,14 @@ DROP PROCEDURE IF EXISTS delete_guest_keytopic;
 DELIMITER //
 CREATE PROCEDURE delete_guest_keytopic(
 IN varkeytopic VARCHAR(50),
-IN varguestID INT
+IN varguestID INT,
+OUT rowsAffected INT
 )
 BEGIN
     DELETE FROM guest_keytopics
     WHERE keytopic = varkeytopic AND guestID = varguestID;
+    
+    SELECT ROW_COUNT() INTO rowsAffected;
 END //
 DELIMITER ;
 
@@ -451,7 +460,7 @@ BEGIN
       guest g ON g.guestID = gkt.guestID
     WHERE
       g.guestID = varID;
-  END IF;
+	END IF;
 END //
 DELIMITER ;
 
