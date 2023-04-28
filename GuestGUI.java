@@ -201,7 +201,13 @@ public class GuestGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enterKeytopicPanel();
-            dl.insertKeyTopic(id, keytopic, discriminator);
+            int result = dl.insertKeyTopic(id, keytopic, discriminator);
+            if(result == -1){
+               JOptionPane.showMessageDialog(null, "An error occured! The key topic could not be inserted.");
+            }
+            else{
+               JOptionPane.showMessageDialog(null, "The key topic was inserted!");
+            }
 			}
 		};
 	}
@@ -214,7 +220,16 @@ public class GuestGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enterKeytopicPanel();
-            dl.deleteKeyTopic(keytopic, id, discriminator);
+            int rowsAffected = dl.deleteKeyTopic(keytopic, id, discriminator);
+            if(rowsAffected == 0){
+               JOptionPane.showMessageDialog(null, "The key topic you tried to delete did not exist.\nNo rows were affected.");
+            }
+            else if(rowsAffected == -1){
+               JOptionPane.showMessageDialog(null, "An error occured! No key topic was deleted.");
+            }
+            else{
+               JOptionPane.showMessageDialog(null, "The key topic was deleted!");
+            }
 			}
 		};
 	}
