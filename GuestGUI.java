@@ -17,7 +17,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GuestGUI {
+public class GuestGUI{
 
    private DataLayer dl = new DataLayer();
    String discriminator = "G";
@@ -49,7 +49,7 @@ public class GuestGUI {
          JOptionPane.showMessageDialog(null,"Unable to connect to data source\nPlease re-run the program");
       }
       else{
-         id = dl.getGuestId(username);
+         id = dl.getUserId(username);
          this.displayGuestHome();
       } // end else
    } // end constructor 
@@ -109,7 +109,7 @@ public class GuestGUI {
       
       // display JPanel
       JOptionPane.showMessageDialog(null, registerBox, "Register New Guest", JOptionPane.INFORMATION_MESSAGE);
-
+      
       // get input 
       username = usernameTf.getText();
       password = passwordTf.getText();
@@ -125,7 +125,7 @@ public class GuestGUI {
       
       if(validUsername){
          dl.insertPerson(username, password, 0, discriminator); // 0 is a placeholder for id, guests are given an id
-         id = dl.getGuestId(username);
+         id = dl.getUserId(username);
          dl.insertGuest(id, fname, lname, company, email, phone);
          this.displayGuestHome();
       }
