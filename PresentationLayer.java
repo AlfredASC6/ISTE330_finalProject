@@ -41,7 +41,7 @@ public class PresentationLayer {
       		if (dbUsername.isBlank()) dbUsername = "root"; // assign default username
       		if (dbPassword.isBlank()) dbPassword = "Student-2023"; // assign default password
       		if (dbName.isBlank()) dbName = "researchinterests"; // assign default database
-      
+      		dl = new DataLayer(dbUsername, dbPassword, dbName);
 
       	//instantiate database user variable input 
       		JFrame selectionFrame = new JFrame("Select Your Role");
