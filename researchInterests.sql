@@ -387,7 +387,7 @@ CREATE PROCEDURE match_keytopic(
 )
 BEGIN
   IF discriminator = 'F' THEN
-    SELECT 
+    SELECT DISTINCT
       student_keytopics.keytopic AS Student_Topic,
       s.studentID AS Student_ID,
       s.fName AS Student_First_Name, s.lName AS Student_Last_Name,
@@ -405,62 +405,80 @@ BEGIN
       faculty_keytopics.facultyID = varID;
 
   ELSEIF discriminator = 'S' THEN
-    SELECT 
-      faculty_keytopics.keytopic AS Faculty_Topic,
-      guest_keytopics.keytopic AS Guest_Topic,
-      f.fName AS Faculty_First_Name, f.lName AS Faculty_Last_Name,
-      f.email AS Faculty_Email, f.phoneNum AS Faculty_PhoneNum,
-      f.officePhoneNum AS Faculty_OfficePhoneNum, f.officeNum AS Faculty_OfficeNum,
-      f.buildingCode AS Faculty_BuildingCode, f.departmentID AS Faculty_DepartmentID,
-      g.fName AS Guest_First_Name, g.lName AS Guest_Last_Name,
-      g.email AS Guest_Email, g.phoneNum AS Guest_PhoneNum
-    FROM 
-      faculty_keytopics
-    INNER JOIN 
-      student_keytopics
-    ON 
-      faculty_keytopics.keytopic = student_keytopics.keytopic
-    INNER JOIN
-      faculty AS f ON f.facultyID = faculty_keytopics.facultyID
-    INNER JOIN
-      guest_keytopics
-    ON
-      faculty_keytopics.keytopic = guest_keytopics.keytopic
-    INNER JOIN
-      guest AS g ON g.guestID = guest_keytopics.guestID
-    WHERE
-      student_keytopics.studentID = varID;
+-- Faculty SELECT statement
+SELECT
+    f.facultyID AS Faculty_ID,
+    faculty_keytopics.keytopic AS Faculty_Topic,
+    f.fName AS Faculty_First_Name, f.lName AS Faculty_Last_Name,
+    f.email AS Faculty_Email, f.phoneNum AS Faculty_PhoneNum,
+    f.officePhoneNum AS Faculty_OfficePhoneNum, f.officeNum AS Faculty_OfficeNum,
+    f.buildingCode AS Faculty_BuildingCode, f.departmentID AS Faculty_DepartmentID
+FROM
+    faculty_keytopics
+INNER JOIN
+    student_keytopics
+ON
+    faculty_keytopics.keytopic = student_keytopics.keytopic
+INNER JOIN
+    faculty AS f ON f.facultyID = faculty_keytopics.facultyID
+WHERE
+    student_keytopics.studentID = varID;
+
+-- Guest SELECT statement
+SELECT
+    guest_keytopics.keytopic AS Guest_Topic,
+    g.guestID AS Guest_ID,
+    g.fName AS Guest_First_Name, g.lName AS Guest_Last_Name,
+    g.email AS Guest_Email, g.phoneNum AS Guest_PhoneNum
+FROM
+    guest_keytopics
+INNER JOIN
+    student_keytopics
+ON
+    guest_keytopics.keytopic = student_keytopics.keytopic
+INNER JOIN
+    guest AS g ON g.guestID = guest_keytopics.guestID
+WHERE
+    student_keytopics.studentID = varID;
 
   ELSEIF discriminator = 'G' THEN
-    SELECT 
-      faculty_keytopics.keytopic AS Faculty_Topic,
-      student_keytopics.keytopic AS Student_Topic,
-      f.facultyID AS Faculty_ID,
-      f.fName AS Faculty_First_Name, f.lName AS Faculty_Last_Name,
-      f.email AS Faculty_Email, f.phoneNum AS Faculty_PhoneNum,
-      f.officePhoneNum AS Faculty_OfficePhoneNum, f.officeNum AS Faculty_OfficeNum,
-      f.buildingCode AS Faculty_BuildingCode, f.departmentID AS Faculty_DepartmentID,
-      s.studentID AS Student_ID,
-      s.fName AS Student_First_Name, s.lName AS Student_Last_Name,
-      s.email AS Student_Email, s.phoneNum AS Student_PhoneNum,
-      s.departmentID AS Student_DepartmentID
+    -- Faculty SELECT statement for 'G' discriminator
+    SELECT DISTINCT
+        faculty_keytopics.keytopic AS Faculty_Topic,
+        f.facultyID AS Faculty_ID,
+        f.fName AS Faculty_First_Name, f.lName AS Faculty_Last_Name,
+        f.email AS Faculty_Email, f.phoneNum AS Faculty_PhoneNum,
+        f.officePhoneNum AS Faculty_OfficePhoneNum, f.officeNum AS Faculty_OfficeNum,
+        f.buildingCode AS Faculty_BuildingCode, f.departmentID AS Faculty_DepartmentID
     FROM 
-      faculty_keytopics
-    INNER JOIN 
-      student_keytopics
-    ON 
-      faculty_keytopics.keytopic = student_keytopics.keytopic
+        faculty_keytopics
     INNER JOIN
-      faculty f ON f.facultyID = faculty_keytopics.facultyID
+        guest_keytopics gkt ON gkt.keytopic = faculty_keytopics.keytopic
     INNER JOIN
-      student s ON s.studentID = student_keytopics.studentID
+        faculty f ON f.facultyID = faculty_keytopics.facultyID
     INNER JOIN
-      guest_keytopics gkt ON gkt.keytopic = faculty_keytopics.keytopic
-    INNER JOIN
-      guest g ON g.guestID = gkt.guestID
+        guest g ON g.guestID = gkt.guestID
     WHERE
-      g.guestID = varID;
-	END IF;
+        g.guestID = varID;
+
+-- Student SELECT statement for 'G' discriminator
+    SELECT DISTINCT
+        student_keytopics.keytopic AS Student_Topic,
+        s.studentID AS Student_ID,
+        s.fName AS Student_First_Name, s.lName AS Student_Last_Name,
+        s.email AS Student_Email, s.phoneNum AS Student_PhoneNum,
+        s.departmentID AS Student_DepartmentID
+    FROM 
+        student_keytopics
+    INNER JOIN
+        guest_keytopics gkt ON gkt.keytopic = student_keytopics.keytopic
+    INNER JOIN
+        student s ON s.studentID = student_keytopics.studentID
+    INNER JOIN
+        guest g ON g.guestID = gkt.guestID
+    WHERE
+        g.guestID = varID;
+  END IF;
 END //
 DELIMITER ;
 
