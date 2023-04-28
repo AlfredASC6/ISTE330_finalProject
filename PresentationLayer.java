@@ -42,10 +42,41 @@ public class PresentationLayer {
       if (dbPassword.isBlank()) dbPassword = "student"; // assign default password
       if (dbName.isBlank()) dbName = "researchinterests"; // assign default database
       
-      
+      //instantiate database user variable input 
+	   JFrame selectionFrame = new JFrame("Select Your Role");
+	   selectionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	   selectionFrame.setSize(300, 200);
+	   
+	   JPanel selectionPanel = new JPanel(new GridLayout(3, 1));
+
+	   JButton facultyButton = new JButton("Faculty");
+	   facultyButton.addActionListener(e -> {
+	       // Add any action you want to perform when the Faculty button is clicked
+	   });
+	   //formatted like so: loginButton.addActionListener(e -> showLoginForm());
+	   
+	   selectionPanel.add(facultyButton);
+
+	   JButton studentButton = new JButton("Student");
+	   studentButton.addActionListener(e -> {
+		   //new StudentGUI(dl);
+	       // Add any action you want to perform when the Student button is clicked
+	   });
+	   selectionPanel.add(studentButton);
+
+	   JButton guestButton = new JButton("Guest");
+	   guestButton.addActionListener(e -> {
+	       // Add any action you want to perform when the Guest button is clicked
+	   });
+	   //formatted like so: loginButton.addActionListener(e -> showLoginForm());
+	   selectionPanel.add(guestButton);
+	   
+	   selectionFrame.add(selectionPanel);
+	   selectionFrame.setLocationRelativeTo(null);
+	   selectionFrame.setVisible(true);
       
       ///// testing GUIs remove later /////
-      new GuestGUI(dbUsername, dbPassword, dbName);
+      //new GuestGUI(dbUsername, dbPassword, dbName);
       //new FacultyGUI(dbUsername, dbPassword, dbName);
       
       
