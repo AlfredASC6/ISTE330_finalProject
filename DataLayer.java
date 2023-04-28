@@ -411,6 +411,7 @@ public class DataLayer {
   //beginning of SELECT methods that allow java to output matches as strings
   public String match(int id, String discriminator) {
 	    String matched = "";
+       matched += "----------\n";
 	    try {
 	        String sql = "{CALL match_keytopic(?, ?)}";
 	        CallableStatement cs = connection.prepareCall(sql);
@@ -427,26 +428,13 @@ public class DataLayer {
 	                matched += "Student Phone: " + rs.getString("Student_PhoneNum") + "\n";
 	                matched += "Student Department ID: " + rs.getString("Student_DepartmentID") + "\n";
 	                matched += "Student_Topic: " + rs.getString("Student_Topic") + "\n";
+                   matched += "----------\n";
 	            } else if (discriminator.equals("S")) {
-	                matched += "Faculty ID: " + rs.getInt("Faculty_ID") + "\n";
-	                matched += "Faculty Name: " + rs.getString("Faculty_First_Name") + " " + rs.getString("Faculty_Last_Name") + "\n";
-	                matched += "Faculty Email: " + rs.getString("Faculty_Email") + "\n";
-	                matched += "Faculty Phone: " + rs.getString("Faculty_PhoneNum") + "\n";
-	                matched += "Faculty Office Phone: " + rs.getString("Faculty_OfficePhoneNum") + "\n";
-	                matched += "Faculty Office Number: " + rs.getString("Faculty_OfficeNum") + "\n";
-	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
-	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
-	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n";
+	                matched += getMatchingFaculty(id, discriminator);
+                   matched += "----------\n";
 	            }else if (discriminator.equals("G")) {
-	                matched += "Faculty ID: " + rs.getInt("Faculty_ID") + "\n";
-	                matched += "Faculty Name: " + rs.getString("Faculty_First_Name") + " " + rs.getString("Faculty_Last_Name") + "\n";
-	                matched += "Faculty Email: " + rs.getString("Faculty_Email") + "\n";
-	                matched += "Faculty Phone: " + rs.getString("Faculty_PhoneNum") + "\n";
-	                matched += "Faculty Office Phone: " + rs.getString("Faculty_OfficePhoneNum") + "\n";
-	                matched += "Faculty Office Number: " + rs.getString("Faculty_OfficeNum") + "\n";
-	                matched += "Faculty Building Code: " + rs.getString("Faculty_BuildingCode") + "\n";
-	                matched += "Faculty Department ID: " + rs.getString("Faculty_DepartmentID") + "\n";
-	                matched += "Faculty_Topic: " + rs.getString("Faculty_Topic") + "\n";
+	                matched += getMatchingFaculty(id, discriminator);
+                   matched += "----------\n";
 	            }
 	        }
 	        if (cs.getMoreResults()) {
@@ -458,6 +446,7 @@ public class DataLayer {
 	                    matched += "Guest Email: " + rs.getString("Guest_Email") + "\n";
 	                    matched += "Guest Phone: " + rs.getString("Guest_PhoneNum") + "\n";
 	                    matched += "Guest_Topic: " + rs.getString("Guest_Topic") + "\n";
+                       matched += "----------\n";
 	                } else if (discriminator.equals("G")) {
 	                    matched += "Student ID: " + rs.getInt("Student_ID") + "\n";
 	                    matched += "Student Name: " + rs.getString("Student_First_Name") + " " + rs.getString("Student_Last_Name") + "\n";
@@ -465,6 +454,7 @@ public class DataLayer {
 	                    matched += "Student Phone: " + rs.getString("Student_PhoneNum") + "\n";
 	                    matched += "Student Department ID: " + rs.getString("Student_DepartmentID") + "\n";
 	                    matched += "Student_Topic: " + rs.getString("Student_Topic") + "\n";
+                       matched += "----------\n";
 	                }
 	            }
 	        }
@@ -474,7 +464,73 @@ public class DataLayer {
 
 	    return matched;
 	} // end of match function
-  
+      
+   public String getMatchingFaculty(int id, String discriminator){
+      ArrayList<Integer> facIds = new ArrayList<Integer>();
+      ArrayList<String> keytopics = new ArrayList<String>();
+      int currId;
+      String procedureCall = "";
+      String sql = "";
+      String matchingFaculty = "";
+      
+      // get list of faculty IDs
+      try{
+         if(discriminator.equals("S")){
+            sql = "SELECT keytopic FROM student_keytopics WHERE studentID = " + id;
+         }
+         else if(discriminator.equals("G")){
+            sql = "SELECT keytopic FROM guest_keytopics WHERE guestID = " + id;
+         }
+         Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery(sql);
+         while(rs.next()){
+            String topic = rs.getString("keytopic");
+            procedureCall = "{CALL get_faculty_ids(?)}";
+            CallableStatement statement = connection.prepareCall(procedureCall);
+            statement.setString(1, topic);
+            ResultSet rs2 = statement.executeQuery();
+            while(rs2.next()){
+               currId = rs2.getInt("facultyID");
+               if(!facIds.contains(currId)){
+                  facIds.add(currId);
+                  keytopics.add(topic);
+               }
+            }
+         }
+      }
+      catch(Exception e){
+        System.out.println("Error 1: " + e);
+      }
+      
+      // get faculty info 
+      try{
+         String select = "";
+         Statement selectStmt = connection.createStatement();
+         for(int i = 0; i < facIds.size(); i++){
+            select = "SELECT * FROM faculty WHERE facultyID = '" + facIds.get(i) + "'";
+            ResultSet selectRS = selectStmt.executeQuery(select);
+            while(selectRS.next()) {
+               matchingFaculty += "Faculty ID: " + selectRS.getInt("facultyID") + "\n";
+               matchingFaculty += "Faculty Name: " + selectRS.getString("fName") + " " + selectRS.getString("lName") + "\n";
+   	         matchingFaculty += "Faculty Email: " + selectRS.getString("email") + "\n";
+   	         matchingFaculty += "Faculty Phone: " + selectRS.getString("phoneNum") + "\n";
+   	         matchingFaculty += "Faculty Office Phone: " + selectRS.getString("officePhoneNum") + "\n";
+   	         matchingFaculty += "Faculty Office Number: " + selectRS.getString("officeNum") + "\n";
+   	         matchingFaculty += "Faculty Building Code: " + selectRS.getString("buildingCode") + "\n";
+   	         matchingFaculty += "Faculty Department ID: " + selectRS.getString("departmentID") + "\n";
+   	         matchingFaculty += "Faculty_Topic: " + keytopics.get(i) + "\n";
+            }
+         }
+      }
+      catch(Exception e){
+        System.out.println("Error 2: " + e);
+      }
+      
+      System.out.println(matchingFaculty);
+      return matchingFaculty;
+      
+   } // end getMatchingFacultyIds
+
   //class that gets an abstract from the database 
   public String getAbstract(int facultyID, int abstractID){
      String abstractTopic = "";
@@ -588,47 +644,4 @@ public class DataLayer {
     }
     return check;
    }
-
-
-
-/* commenting out for now DELETE LATER 
-   public static void main(String[] args) {
-   	  System.out.println("Login");
-   	    DataLayer dataLayer = new DataLayer(); // Create a new object. An Instantiation
-   	    
-   	    Scanner scanner = new Scanner(System.in);
-   	    System.out.println("Please enter your role (faculty, student, or guest): ");
-   	    String role = scanner.nextLine().toLowerCase();
-   	    System.out.println("Please enter your ID: ");
-   	    id = scanner.nextInt();
-   	    scanner.nextLine(); // consume the newline character
-   	    
-   	    // Faculty prompt
-   	    if(role.equals("faculty")) {
-   	    	scanner.nextLine(); // consume the newline character
-   	    	System.out.println("Please enter the abstract title: ");
-   	    	String inputAbstractTitle = scanner.nextLine();
-   	    	System.out.println("Please enter the abstract: ");
-   	    	String inputAbstract = scanner.nextLine();
-   	    	dataLayer.insertFacultyAbstract(inputAbstractTitle,inputAbstract, id);
-   	    	
-   	    	System.out.println("Please enter the keytopics: ");
-   	    	String inputkeytopics = scanner.nextLine();
-   	    	dataLayer.insertKeyTopic(id, inputkeytopics, "F");
-   	    	System.out.println(dataLayer.match(id, "F"));
-   	     // Student prompt
-   	    }else if(role.equals("student")) {
-   	    	System.out.println("Please enter the keytopics: ");
-   	    	String inputkeytopics = scanner.nextLine();
-   	    	dataLayer.insertKeyTopic(id, inputkeytopics, "S");
-   	    	System.out.println(dataLayer.match(id, "S"));
-   	    // Guest prompt
-   	    }else if(role.equals("guest")) {
-   	    	System.out.println("Please enter the keytopics: ");
-   	    	String inputkeytopics = scanner.nextLine();
-   	    	dataLayer.insertKeyTopic(id, inputkeytopics, "G");
-   	    	System.out.println(dataLayer.match(id, "G"));
-   	    }
-   	    scanner.close();
-   } // end of main method */
 } // end of class
