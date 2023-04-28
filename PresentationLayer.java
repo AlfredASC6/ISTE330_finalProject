@@ -19,6 +19,7 @@ import javax.swing.*;
 
 public class PresentationLayer {
 
+   private DataLayer dl;
    private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
 	
    // database variables 
