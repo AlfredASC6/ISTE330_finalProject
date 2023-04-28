@@ -464,4 +464,51 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Stored Procedure for checking if username exists
+
+DROP PROCEDURE IF EXISTS checkUsername;
+DELIMITER //
+CREATE PROCEDURE checkUsername(
+	IN UserNameCheck VARCHAR(15),
+    OUT result INT
+)
+BEGIN
+	DECLARE userNameCount INT DEFAULT 0;
+	
+	SELECT COUNT(*) INTO userNameCount
+	FROM person
+	WHERE username = UserNameCheck;
+	
+	IF userNameCount > 0 THEN
+		SET result = 1;
+	ELSE
+		SET result = 0;
+	END IF;
+END //
+DELIMITER ;
+
+-- Stored Procedure for checking if Password matches stored password
+
+DROP PROCEDURE IF EXISTS checkPasswd;
+DELIMITER //
+CREATE PROCEDURE checkPasswd(
+	IN userNameCheck VARCHAR(15),
+    IN pwd VARCHAR(30),
+    OUT result INT
+)
+BEGIN
+	DECLARE passwordCount INT DEFAULT 0;
+	
+	SELECT COUNT(*) INTO passwordCount
+	FROM person
+	WHERE username = UserNameCheck AND password = pwd;
+	
+	IF passwordCount > 0 THEN
+		SET result = 1;
+	ELSE
+		SET result = 0;
+	END IF;
+END //
+DELIMITER ;
+
 SHOW PROCEDURE STATUS WHERE db Like "research%"; 
