@@ -39,7 +39,7 @@ public class PresentationLayer {
       		dbPassword = JOptionPane.showInputDialog(null, "Password (default=student):", "Connect", JOptionPane.PLAIN_MESSAGE);
       		dbName = JOptionPane.showInputDialog(null, "Database (default=researchInterests): ", "Connect", JOptionPane.PLAIN_MESSAGE);
       		if (dbUsername.isBlank()) dbUsername = "root"; // assign default username
-      		if (dbPassword.isBlank()) dbPassword = "student"; // assign default password
+      		if (dbPassword.isBlank()) dbPassword = "Student-2023"; // assign default password
       		if (dbName.isBlank()) dbName = "researchinterests"; // assign default database
       
 
@@ -109,7 +109,7 @@ public class PresentationLayer {
 			} else if ("G".equals(discriminator)) {
 				new GuestGUI(dbUsername, dbPassword, dbName);
 			} else if ("F".equals(discriminator)) {
-				new FacultyGUI(dbUsername, dbPassword, dbName);
+				new FacultyGUI(dbUsername, dbPassword, dbName, false);
 			}
 		});
 		panel.add(signUpButton);
@@ -150,7 +150,7 @@ public class PresentationLayer {
 	                } else if ("G".equals(discrim)) {
 	                    new GuestGUI(dbUsername, dbPassword, dbName);
 	                } else if ("F".equals(discrim)) {
-	                    //new FacultyGUI(dbUsername, dbPassword, dbName);
+	                    //new FacultyGUI(dbUsername, dbPassword, dbName, true);
 	                }
 	            }
 	        }

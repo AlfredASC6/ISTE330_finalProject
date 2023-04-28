@@ -14,6 +14,8 @@ Group Project Week 3 HW
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -40,15 +42,101 @@ public class FacultyGUI {
 	private DataLayer dl;
 	private final int ID = 1;
 
-	// default values
+	// faculty is not signed up (sign up)
 	public FacultyGUI() {
-		new FacultyGUI("root", "Student-2023", "researchinterests");
+		register();
 	}
 	
-	public FacultyGUI(String username, String password, String database) {
+	// faculty is signed up (login)
+	public FacultyGUI(String username, String password, String database, boolean registered) {
 		// Initialize data layer
 		dl = new DataLayer(username, password, database);
+		
+		if (!registered) {
+			register();
+		} else {
+			showHome();
+		}
+	}
+	
+	// Show register dialog for faculty
+	private void register() {
+		JPanel registerBox = new JPanel(new GridLayout(9, 2));
 
+	    // labels
+	    JLabel usernameLbl = new JLabel("Username: ");
+	    JLabel passwordLbl = new JLabel("Password: ");
+	    JLabel fnameLbl = new JLabel("First Name: ");
+	    JLabel lnameLbl = new JLabel("Last Name: ");
+	    JLabel emailLbl = new JLabel("Email: ");
+	    JLabel phoneNumLbl = new JLabel("Phone Number: ");
+	    JLabel officePhoneNumLbl = new JLabel("Office Phone Number: ");
+	    JLabel buildingCodeLbl = new JLabel("Phone Number: ");
+	    JLabel departmentIdLbl = new JLabel("Phone Number: ");
+
+	    // fields
+	    JTextField usernameTf = new JTextField("");
+	    JTextField passwordTf = new JPasswordField("");
+	    JTextField fnameTf = new JTextField("");
+	    JTextField lnameTf = new JTextField("");
+	    JTextField emailTf = new JTextField("");
+	    JTextField phoneNumTf = new JTextField("");
+	    JTextField officePhoneNumTf = new JTextField("");
+	    JTextField buildingCodeTf = new JTextField("");
+	    JTextField departmentIdTf = new JTextField("");
+
+	    // build JPanel
+	    registerBox.add(usernameLbl);
+	    registerBox.add(usernameTf);
+	    registerBox.add(passwordLbl);
+	    registerBox.add(passwordTf);
+	    registerBox.add(fnameLbl);
+	    registerBox.add(fnameTf);
+	    registerBox.add(lnameLbl);
+	    registerBox.add(lnameTf);
+	    registerBox.add(emailLbl);
+	    registerBox.add(emailTf);
+	    registerBox.add(phoneNumLbl);
+	    registerBox.add(phoneNumTf);
+	    registerBox.add(officePhoneNumLbl);
+	    registerBox.add(officePhoneNumTf);
+	    registerBox.add(buildingCodeLbl);
+	    registerBox.add(buildingCodeTf);
+	    registerBox.add(departmentIdLbl);
+	    registerBox.add(departmentIdTf);
+
+	    // display JPanel
+	    JOptionPane.showMessageDialog(null, registerBox, "Register New Student", JOptionPane.INFORMATION_MESSAGE);
+
+	    // get input
+	    String username = usernameTf.getText();
+	    String password = passwordTf.getText();
+	    String fname = fnameTf.getText();
+	    String lname = lnameTf.getText();
+	    String email = emailTf.getText();
+	    String phoneNum = phoneNumTf.getText();
+	    String officePhoneNum = officePhoneNumTf.getText();
+	    String buildingCode = buildingCodeTf.getText();
+	    String departmentId = departmentIdTf.getText();
+		
+	    boolean personExists = dl.checkUsername(username);
+	    if (personExists) {
+	        JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
+	        register();
+	    }
+	    else {
+	    	int id = new Random().nextInt(10000); // I dont know why ID isn't set to auto increment??
+	    	int res = dl.insertFacultyMember(id, fname, lname, email, phoneNum, officePhoneNum, ID, buildingCode, ID);
+	    	if (res != -1) {
+	    		showHome();
+	    	} else {
+	    		JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
+	    		System.exit(1);
+	    	}
+	    }
+	}
+	
+	private void showHome() {
 		// Set up frame
 		frame = new JFrame();
 		frame.setSize(400, 800);

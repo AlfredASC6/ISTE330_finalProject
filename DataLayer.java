@@ -206,7 +206,7 @@ public class DataLayer {
    } 
    
    //Add a faculty member
-   public void insertFacultyMember(int facultyId, String fName, String lName, String email, String phoneNum, String officePhoneNum, int officeNum, String buildingCode, int departmentId) {
+   public int insertFacultyMember(int facultyID, String fName, String lName, String email, String phoneNum, String officePhoneNum, int officeNum, String buildingCode, int departmentId) {
        try {
            // create SQL statement
            String sql = "INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentID) " +
@@ -214,7 +214,7 @@ public class DataLayer {
            PreparedStatement statement = connection.prepareStatement(sql);
    
            // set parameters
-           statement.setInt(1, facultyId);
+           statement.setInt(1, facultyID);
            statement.setString(2, fName);
            statement.setString(3, lName);
            statement.setString(4, email);
@@ -225,12 +225,14 @@ public class DataLayer {
            statement.setInt(9, departmentId);
    
            // execute statement
-           statement.executeUpdate();
+           int rows = statement.executeUpdate();
    
            System.out.println("New faculty member inserted successfully!");
+           return rows;
        } catch (SQLException e) {
            // handle any errors
            e.printStackTrace();
+           return -1;
        }
    }
    
