@@ -140,17 +140,18 @@ public class PresentationLayer {
 	                    "Error", JOptionPane.ERROR_MESSAGE);
 	        } else {
 	            String password = new String(pfPassword.getPassword());
-	            if (dl.checkPasswd(username, password)) {
+	            
+	            if (!dl.checkPasswd(username, password)) {
 	                JOptionPane.showMessageDialog(null, "Invalid password. Please try again.",
 	                        "Error", JOptionPane.ERROR_MESSAGE);
 	            } else {
 	                // Call the appropriate GUI constructor based on the discriminator value
 	                if ("S".equals(discrim)) {
-	                    new StudentGUI(dbUsername, dbPassword, dbName);
+	                    new StudentGUI(dbUsername, dbPassword, dbName, username);
 	                } else if ("G".equals(discrim)) {
-	                    new GuestGUI(dbUsername, dbPassword, dbName);
+	                    new GuestGUI(dbUsername, dbPassword, dbName, username);
 	                } else if ("F".equals(discrim)) {
-	                    //new FacultyGUI(dbUsername, dbPassword, dbName, true);
+	                    //new FacultyGUI(dbUsername, dbPassword, dbName);
 	                }
 	            }
 	        }
