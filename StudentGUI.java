@@ -117,9 +117,8 @@ public class StudentGUI {
 	    
 	    if (validUsername) {
 	        dl.insertPerson(username, password, 0, discriminator);
-	        int newId = 0;
+	        int newId = getUserId(username);
 			if (newId != -1) {
-	            id = newId;
 	            dl.insertStudent(id, fname, lname, email, phoneNum, newId);
 	            this.displayStudentHome();
 	        } else {
