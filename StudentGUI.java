@@ -26,7 +26,8 @@ public class StudentGUI {
    String password = new String();
    String fname = new String();
    String lname = new String();
-   String major = new String();
+   String email = new String();
+   String phoneNum = new String();
    int id;
    
    // user input variables 
@@ -108,28 +109,44 @@ public class StudentGUI {
 	    password = passwordTf.getText();
 	    fname = fnameTf.getText();
 	    lname = lnameTf.getText();
-	    String email = emailTf.getText();
-	    String phoneNum = phoneNumTf.getText();
+	    email = emailTf.getText();
+	    phoneNum = phoneNumTf.getText();
       
-      // insert into db
-      // check if username is valid 
-	    boolean validUsername = dl.checkUsername(username);
+	    registerAndDisplayStudentHome();
 	    
-	    if (validUsername) {
-	        dl.insertPerson(username, password, 0, discriminator);
-	        int newId = getUserId(username);
-			if (newId != -1) {
-	            dl.insertStudent(id, fname, lname, email, phoneNum, newId);
-	            this.displayStudentHome();
-	        } else {
-	            JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
-	            this.registerStudent();
-	        }
-	    } else {
+	}
+
+   private void registerAndDisplayStudentHome() {
+	   	boolean validUsername = dl.checkUsername(username);
+	    if (!validUsername) {
 	        JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
 	        this.registerStudent();
+	        return;
 	    }
+
+	    int insertPersonResult = dl.insertPerson(username, password, 0, discriminator);
+	    if (insertPersonResult == -1) {
+	        JOptionPane.showMessageDialog(null, "An error occurred while inserting the person. Please try again.");
+	        this.registerStudent();
+	        return;
+	    }
+
+	    int newId = dl.getUserId(username);
+	    if (newId == -1) {
+	        JOptionPane.showMessageDialog(null, "An error occurred while getting the userID. Please try again.");
+	        this.registerStudent();
+	        return;
+	    }
+
+	    int insertStudentResult = dl.insertStudent(id, fname, lname, email, phoneNum, newId);
+	    if (insertStudentResult == -1) {
+	        JOptionPane.showMessageDialog(null, "An error occurred while inserting the student. Please try again.");
+	        this.registerStudent();
+	        return;
+	    }
+	    this.displayStudentHome();
 	}
+
 
    public void displayStudentHome(){
         // set up variables
