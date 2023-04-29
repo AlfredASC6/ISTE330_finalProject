@@ -116,7 +116,7 @@ public class FacultyGUI {
 	    String phoneNum = phoneNumTf.getText();
 	    String officePhoneNum = officePhoneNumTf.getText();
 	    String buildingCode = buildingCodeTf.getText();
-	    String departmentId = departmentIdTf.getText();
+	    int departmentId = Integer.parseInt(departmentIdTf.getText()); 
 		
 	    boolean personExists = dl.checkUsername(username);
 	    if (personExists) {
@@ -125,7 +125,7 @@ public class FacultyGUI {
 	    }
 	    else {
 	    	int id = new Random().nextInt(10000); // I dont know why ID isn't set to auto increment??
-	    	int res = dl.insertFacultyMember(id, fname, lname, email, phoneNum, officePhoneNum, ID, buildingCode, ID);
+	    	int res = dl.insertFacultyMember(id, fname, lname, email, phoneNum, officePhoneNum, ID, buildingCode, departmentId);
 	    	if (res != -1) {
 	    		ID = dl.getUserId(username);
 	    		showHome();
