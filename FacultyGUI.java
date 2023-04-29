@@ -41,9 +41,11 @@ public class FacultyGUI {
 
 	private DataLayer dl;
 	private final int ID = 1;
+	private String username;
 
 	// faculty is not signed up (sign up)
-	public FacultyGUI() {
+	public FacultyGUI(String dbUsername, String dbPassword, String database) {
+		dl = new DataLayer(dbUsername, dbPassword, database);
 		register();
 	}
 	
@@ -51,13 +53,7 @@ public class FacultyGUI {
 	public FacultyGUI(String dbUsername, String dbPassword, String database, String username) {
 		// Initialize data layer
 		dl = new DataLayer(dbUsername, dbPassword, database);
-		boolean registered = dl.checkUsername(username);
-		// Show appropriate window
-		if (!registered) {
-			register();
-		} else {
-			showHome();
-		}
+		showHome();
 	}
 	
 	// Show register dialog for faculty
@@ -72,8 +68,8 @@ public class FacultyGUI {
 	    JLabel emailLbl = new JLabel("Email: ");
 	    JLabel phoneNumLbl = new JLabel("Phone Number: ");
 	    JLabel officePhoneNumLbl = new JLabel("Office Phone Number: ");
-	    JLabel buildingCodeLbl = new JLabel("Phone Number: ");
-	    JLabel departmentIdLbl = new JLabel("Phone Number: ");
+	    JLabel buildingCodeLbl = new JLabel("Building Code: ");
+	    JLabel departmentIdLbl = new JLabel("Department ID: ");
 
 	    // fields
 	    JTextField usernameTf = new JTextField("");
@@ -107,7 +103,7 @@ public class FacultyGUI {
 	    registerBox.add(departmentIdTf);
 
 	    // display JPanel
-	    JOptionPane.showMessageDialog(null, registerBox, "Register New Student", JOptionPane.INFORMATION_MESSAGE);
+	    JOptionPane.showMessageDialog(null, registerBox, "Register New Faculty Member", JOptionPane.INFORMATION_MESSAGE);
 
 	    // get input
 	    String username = usernameTf.getText();
@@ -123,7 +119,7 @@ public class FacultyGUI {
 	    boolean personExists = dl.checkUsername(username);
 	    if (personExists) {
 	        JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
-	        register();
+	        return;
 	    }
 	    else {
 	    	int id = new Random().nextInt(10000); // I dont know why ID isn't set to auto increment??

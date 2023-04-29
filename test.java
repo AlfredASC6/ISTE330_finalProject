@@ -3,7 +3,7 @@
 
 public class test{
    public static void main(String[] args){
-	  new FacultyGUI();
+	  //new FacultyGUI();
       //DataLayer dl = new DataLayer();
       
       //System.out.println(dl.encrypt("I like turtles", "straws"));

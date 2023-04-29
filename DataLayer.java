@@ -291,7 +291,7 @@ public class DataLayer {
          stmt.setString(2, abstractText);
          stmt.setInt(3, facultyID);
          
-         stmt.executeUpdate();
+         int rows = stmt.executeUpdate();
          
          System.out.println("Executed code: " + sql);
       }
