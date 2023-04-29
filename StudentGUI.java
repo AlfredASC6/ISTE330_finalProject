@@ -154,7 +154,7 @@ public class StudentGUI {
 	   JPanel home;
 	   JLabel heading;
 	   JButton insertKeyTopic;
-//	   JButton deleteKeyTopic;
+	   JButton deleteKeyTopic;
 	   JButton findMatches;
 	   JButton exit;
 	   // Set up frame
@@ -177,10 +177,10 @@ public class StudentGUI {
 	   home.add(insertKeyTopic);
 	 	
 	   // delete key topic button
-//	   deleteKeyTopic = new JButton("Delete Key Topic");
-//	   deleteKeyTopic.setFont(DEFAULT_FONT);
-//	   deleteKeyTopic.addActionListener(delete_keytopic_listener());
-//	   home.add(deleteKeyTopic);
+	   deleteKeyTopic = new JButton("Delete Key Topic");
+	   deleteKeyTopic.setFont(DEFAULT_FONT);
+	   deleteKeyTopic.addActionListener(delete_keytopic_listener());
+	   home.add(deleteKeyTopic);
 	      
 	   // find matched button 
 	   findMatches = new JButton("Find Matches");
@@ -231,7 +231,7 @@ public class StudentGUI {
 
 	   /*
 	    * Handle delete key topic button
-	    
+	    */
 	   private ActionListener delete_keytopic_listener() {
 	       return new ActionListener() {
 	           @Override
@@ -248,7 +248,7 @@ public class StudentGUI {
 	           }
 	       };
 	   }
-		*/
+		
 	   
 	   /*
 	    * Handle find matches button
