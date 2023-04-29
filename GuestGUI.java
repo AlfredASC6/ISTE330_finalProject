@@ -124,10 +124,15 @@ public class GuestGUI{
       boolean validUsername = dl.checkUsername(username);
       
       if(validUsername){
-         dl.insertPerson(username, password, 0, discriminator); // 0 is a placeholder for id, guests are given an id
+         int personRes = dl.insertPerson(username, password, 0, discriminator); // 0 is a placeholder for id, guests are given an id
          id = dl.getUserId(username);
-         dl.insertGuest(id, fname, lname, company, email, phone);
-         this.displayGuestHome();
+         int guestResult = dl.insertGuest(id, fname, lname, company, email, phone);
+         if(guestResult == -1 || personRes == -1){
+            JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
+         }
+         else{
+            this.displayGuestHome();
+         }
       }
       else{
          JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
