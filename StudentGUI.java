@@ -129,7 +129,7 @@ public class StudentGUI {
 	        return;
 	    }
 
-	    int insertPersonResult = dl.insertPerson(username, password, 0, discriminator);
+	    int insertPersonResult = dl.insertPerson(username, password, discriminator);
 	    if (insertPersonResult == -1) {
 	        JOptionPane.showMessageDialog(null, "An error occurred while inserting the person. Please try again.");
 	        this.registerStudent();
