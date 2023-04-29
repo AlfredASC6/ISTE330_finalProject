@@ -142,7 +142,8 @@ public class FacultyGUI {
 	        return;
 	    }
 	    else {
-	    	int res = dl.insertFacultyMember(ID, fname, lname, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentId);
+	    	int res = dl.insertPerson(username, password, ID, "F");
+	    	res = dl.insertFacultyMember(ID, fname, lname, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentId);
 	    	if (res != -1) {
 	    		ID = dl.getUserId(username);
 	    		showHome();

@@ -226,6 +226,8 @@ public class DataLayer {
 
 			// execute statement
 			statement.executeUpdate();
+			
+			
 
 			System.out.println("New student inserted successfully!");
 			return 0;
