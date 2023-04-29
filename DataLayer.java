@@ -47,19 +47,6 @@ public class DataLayer {
    
    private static int id;
 	
-	/* This code was moved to the presentation layer since it uses GUIs DELETE LATER 
-	// create connection and prompt user for credentials
-	public DataLayer() {
-		loadDriver();
-		String username = JOptionPane.showInputDialog(null, "Username (default=root): ", "Connect", JOptionPane.PLAIN_MESSAGE);
-		String password = JOptionPane.showInputDialog(null, "Password: ", "Connect", JOptionPane.PLAIN_MESSAGE);
-		String database = JOptionPane.showInputDialog(null, "Database: ", "Connect", JOptionPane.PLAIN_MESSAGE);
-		if (username.isBlank()) username = "root"; // assign default username
-		loadConnection(username, password, database);
-      System.out.println("Connected to database!");
-	}
-	*/
-	
 	//constructor 
         public DataLayer() {
         }
@@ -535,82 +522,6 @@ public class DataLayer {
       return matchingFaculty;
       
    } // end getMatchingFaculty
-	
-	/* following methods are not used
-  //class that gets an abstract from the database 
-  public String getAbstract(int facultyID, int abstractID){
-     String abstractTopic = "";
-     
-     try{
-        String getFacultyAbstract = "SELECT abstract FROM abstract WHERE abstractID = (SELECT abstractID FROM faculty_abstract WHERE facultyID = " + facultyID + ")";
-        
-        PreparedStatement stmt = connection.prepareStatement(getFacultyAbstract);
-        
-        
-        rs = stmt.executeQuery(getFacultyAbstract);
-        
-        while(rs.next()){
-           abstractTopic = rs.getString("abstract");
-           
-        }        
-     }
-     catch(Exception e){
-        System.out.println("Error: " + e);
-     }
-     return abstractTopic;
-  }
-  //method that returns a faculty's interests as a string since rs.execureQuery doesn't 
-  public String getFacultyInterests(int facultyID){
-     String interests = "";
-     try{
-        String getFacultyKeyWords = "SELECT keytopic FROM faculty_keytopics WHERE facultyID = " + facultyID;
-        
-        PreparedStatement stmt = connection.prepareStatement(getFacultyKeyWords);
-        
-        rs = stmt.executeQuery(getFacultyKeyWords);
-        
-        while(rs.next()){
-           interests += rs.getString("keytopic");
-           //System.out.println(interests.toString());
-        }
-        
-     }
-     catch(Exception e){
-        System.out.println("Error: " + e);
-     }
-     
-     return interests;
-  }
-  //method that sorts through an abstract and returns key words that match a faculty's 
-  public String getAbstractKeyTopics(int facultyID, int abstractID){
-     String facultyInterests = getFacultyInterests(facultyID);
-     String abstractText = getAbstract(facultyID, abstractID);
-     String tbreturned = "";
-     
-     // clears all non-alphabetical characters and replaces with whitespace
-     String tempList[] = abstractText.replaceAll("[^a-zA-Z]+", " ").split("\\s+");
-     String tempList1[] = facultyInterests.replaceAll("[^a-zA-Z]+", " ").split("\\s+");
-          
-     List <String> abstractList = Arrays.asList(tempList);
-     List <String> facultyInterestsList = Arrays.asList(tempList1);
-     
-     for(int i = 0; i < facultyInterestsList.size(); i++){
-    	 String element = facultyInterestsList.get(i);
-    	 if(abstractList.contains(element)){
-    		 	tbreturned += element;
-    	 }
-    	 else{
-    		 	System.out.println("No interests noted in the abstract");
-    	 }
-     }
-     return tbreturned;
-  }
-  
-  public static int getId() {
-	  return id;
-  }
-  
-  ***************/
   
   //check Username
   public boolean checkUsername(String username) {
