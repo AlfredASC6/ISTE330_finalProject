@@ -136,8 +136,8 @@ public class FacultyGUI {
 	    	return;
 	    }
 		
-	    boolean personExists = dl.checkUsername(username);
-	    if (personExists) {
+	    boolean validUsername = dl.checkUsername(username);
+	    if (!validUsername) {
 	        JOptionPane.showMessageDialog(null, "That username is taken!\nPlease choose a different one!");
 	        return;
 	    }
