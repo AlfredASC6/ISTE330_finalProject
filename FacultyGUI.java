@@ -60,7 +60,7 @@ public class FacultyGUI {
 	
 	// Show register dialog for faculty
 	private void register() {
-		JPanel registerBox = new JPanel(new GridLayout(9, 2));
+		JPanel registerBox = new JPanel(new GridLayout(10, 2));
 
 	    // labels
 	    JLabel usernameLbl = new JLabel("Username: ");
@@ -70,6 +70,7 @@ public class FacultyGUI {
 	    JLabel emailLbl = new JLabel("Email: ");
 	    JLabel phoneNumLbl = new JLabel("Phone Number: ");
 	    JLabel officePhoneNumLbl = new JLabel("Office Phone Number: ");
+	    JLabel officeNumLbl = new JLabel("Office Number: ");
 	    JLabel buildingCodeLbl = new JLabel("Building Code: ");
 	    JLabel departmentIdLbl = new JLabel("Department ID: ");
 
@@ -81,6 +82,7 @@ public class FacultyGUI {
 	    JTextField emailTf = new JTextField("");
 	    JTextField phoneNumTf = new JTextField("");
 	    JTextField officePhoneNumTf = new JTextField("");
+	    JTextField officeNumTf = new JTextField("");
 	    JTextField buildingCodeTf = new JTextField("");
 	    JTextField departmentIdTf = new JTextField("");
 
@@ -99,6 +101,8 @@ public class FacultyGUI {
 	    registerBox.add(phoneNumTf);
 	    registerBox.add(officePhoneNumLbl);
 	    registerBox.add(officePhoneNumTf);
+	    registerBox.add(officeNumLbl);
+	    registerBox.add(officeNumTf);
 	    registerBox.add(buildingCodeLbl);
 	    registerBox.add(buildingCodeTf);
 	    registerBox.add(departmentIdLbl);
@@ -115,8 +119,22 @@ public class FacultyGUI {
 	    String email = emailTf.getText();
 	    String phoneNum = phoneNumTf.getText();
 	    String officePhoneNum = officePhoneNumTf.getText();
+	    int officeNum;
 	    String buildingCode = buildingCodeTf.getText();
-	    String departmentId = departmentIdTf.getText();
+	    int departmentId;
+	    
+	    try {
+	    	departmentId = Integer.parseInt(departmentIdTf.getText());
+	    } catch (NumberFormatException e) {
+	    	JOptionPane.showMessageDialog(null, "Please enter a valid department ID number.");
+	    	return;
+	    }
+	    try {
+	    	officeNum = Integer.parseInt(officeNumTf.getText());
+	    } catch (NumberFormatException e) {
+	    	JOptionPane.showMessageDialog(null, "Please enter a valid office number.");
+	    	return;
+	    }
 		
 	    boolean personExists = dl.checkUsername(username);
 	    if (personExists) {
@@ -124,8 +142,7 @@ public class FacultyGUI {
 	        return;
 	    }
 	    else {
-	    	int id = new Random().nextInt(10000); // I dont know why ID isn't set to auto increment??
-	    	int res = dl.insertFacultyMember(id, fname, lname, email, phoneNum, officePhoneNum, ID, buildingCode, ID);
+	    	int res = dl.insertFacultyMember(ID, fname, lname, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentId);
 	    	if (res != -1) {
 	    		ID = dl.getUserId(username);
 	    		showHome();
