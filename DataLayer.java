@@ -403,7 +403,6 @@ public class DataLayer {
   //beginning of SELECT methods that allow java to output matches as strings
   public String match(int id, String discriminator) {
 	    String matched = "";
-       matched += "----------\n";
 	    try {
 	        String sql = "{CALL match_keytopic(?, ?)}";
 	        CallableStatement cs = connection.prepareCall(sql);
