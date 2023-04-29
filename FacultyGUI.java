@@ -142,7 +142,7 @@ public class FacultyGUI {
 	        return;
 	    }
 	    else {
-	    	int res = dl.insertPerson(username, password, ID, "F");
+	    	int res = dl.insertPerson(username, password, "F");
     		ID = dl.getUserId(username);
 	    	res = dl.insertFacultyMember(ID, fname, lname, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentId);
 	    	if (res != -1) {
