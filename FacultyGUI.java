@@ -32,6 +32,8 @@ public class FacultyGUI {
 	private JPanel abstracts;
 	private JPanel buttons;
 
+	private JButton addKeyTopic;
+	private JButton deleteKeyTopic;
 	private JButton addAbstract;
 	private JButton editAbstract;
 	private JButton deleteAbstract;
@@ -157,10 +159,19 @@ public class FacultyGUI {
 		abstractLabel.setAlignmentY(1);
 		abstracts.add(abstractLabel);
 		frame.add(abstracts, BorderLayout.CENTER);
-
-		// abstract buttons
+		
 		buttons = new JPanel();
-		buttons.setLayout(new GridLayout(3, 1));
+		buttons.setLayout(new GridLayout(5, 1));
+		
+	    // key topic buttons and abstract buttons
+		addKeyTopic = new JButton("Insert Key Topic");
+		addKeyTopic.setFont(DEFAULT_FONT);
+		addKeyTopic.addActionListener(add_keytopic_listener());
+		buttons.add(addKeyTopic);
+		deleteKeyTopic = new JButton("Delete Key Topic");
+		deleteKeyTopic.setFont(DEFAULT_FONT);
+		deleteKeyTopic.addActionListener(delete_keytopic_listener());
+		buttons.add(deleteKeyTopic);
 		addAbstract = new JButton("Add Abstract");
 		addAbstract.setFont(DEFAULT_FONT);
 		addAbstract.setPreferredSize(new Dimension(300, 50));
@@ -177,10 +188,71 @@ public class FacultyGUI {
 		deleteAbstract.addActionListener(delete_abstract_listener());
 		buttons.add(deleteAbstract);
 		frame.add(buttons, BorderLayout.PAGE_END);
-
+		
 		// Finish up and show frame
 		frame.setVisible(true);
 	}
+	
+	
+	// Handle add keytopic button
+	private ActionListener add_keytopic_listener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				add_keytopic_dialog();
+			}
+		};
+	}
+	// Dialog for adding a keytopic
+	private void add_keytopic_dialog() {
+		String keytopic = JOptionPane.showInputDialog(null, "Input", "Enter the name of the keytopic to add: ", JOptionPane.PLAIN_MESSAGE);
+		if (keytopic == null || keytopic.isBlank()) {
+			JOptionPane.showMessageDialog(null, "Error", "Please enter a valid keytopic to add.", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		int res = dl.insertKeyTopic(ID, keytopic, "F");
+		if (res > 0) {
+			JOptionPane.showMessageDialog(null, "Success", "Keytopic '" + keytopic + "' successfully inserted.", JOptionPane.PLAIN_MESSAGE);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Error", "An error occurred while inserting keytopic.", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	// Perform add keytopic call
+	//private ActionListener submit_keytopic() {
+		
+	//}
+	
+	// Handle delete keytopic button
+	private ActionListener delete_keytopic_listener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				delete_keytopic_dialog();
+			}
+		};
+	}
+	// Dialog for deleting a keytopic
+	private void delete_keytopic_dialog() {
+		String keytopic = JOptionPane.showInputDialog(null, "Input", "Enter the name of the keytopic to delete: ", JOptionPane.PLAIN_MESSAGE);
+		if (keytopic == null || keytopic.isBlank()) {
+			JOptionPane.showMessageDialog(null, "Error", "Please enter a valid keytopic to delete.", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		int res = dl.deleteKeyTopic(keytopic, ID, "F");
+		if (res > 0) {
+			JOptionPane.showMessageDialog(null, "Success", "Keytopic '" + keytopic + "' successfully inserted.", JOptionPane.PLAIN_MESSAGE);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Error", "An error occurred while inserting keytopic.", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	// Perform delete keytopic call
+	//private ActionListener delete_keytopic() {
+		
+	//}
+	
+	
 	
 	// Handle add abstract button
 	private ActionListener add_abstract_listener() {
@@ -191,7 +263,6 @@ public class FacultyGUI {
 			}
 		};
 	}
-	
 	// Blocking dialog for adding an abstract
 	private void add_abstract_dialog() {
 		// Setup dialog
@@ -219,7 +290,6 @@ public class FacultyGUI {
 		// Finish up and show dialog
 		dialog.setVisible(true);
 	}
-	
 	// Perform submit call
 	private ActionListener submit_abstract() {
 		return new ActionListener() {
@@ -231,7 +301,7 @@ public class FacultyGUI {
 		};
 		
 	}
-
+	
 	// Handle edit abstract button
 	private ActionListener edit_abstract_listener() {
 		return new ActionListener() {
@@ -241,7 +311,6 @@ public class FacultyGUI {
 			}
 		};
 	}
-
 	// Blocking dialog for editing an abstract
 	private void edit_abstract_dialog() {
 		// Setup dialog
@@ -279,7 +348,6 @@ public class FacultyGUI {
 		// Finish up and show dialog
 		dialog.setVisible(true);
 	}
-
 	// Perform update call
 	private ActionListener confirm_abstract(int id) {
 		return new ActionListener() {
