@@ -124,7 +124,7 @@ public class GuestGUI{
       boolean validUsername = dl.checkUsername(username);
       
       if(validUsername){
-         int personRes = dl.insertPerson(username, password, 0, discriminator); // 0 is a placeholder for id, guests are given an id
+         int personRes = dl.insertPerson(username, password, discriminator); // 0 is a placeholder for id, guests are given an id
          id = dl.getUserId(username);
          int guestResult = dl.insertGuest(id, fname, lname, company, email, phone);
          if(guestResult == -1 || personRes == -1){
