@@ -342,16 +342,19 @@ public class DataLayer {
       int id = -1;
       
       try{
-         Statement stmt = connection.createStatement();
-         String sql = "SELECT ID FROM person WHERE username = '" + username + "'";
-         ResultSet rs = stmt.executeQuery(sql);
+         String sql = "SELECT ID FROM person WHERE username=?";
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ps.setString(1, username);
+         ResultSet rs = ps.executeQuery();
          
          while(rs.next()){
-            id = Integer.parseInt(rs.getString("ID"));
+            id = rs.getInt(1);
          }
+         
       }
       catch(Exception e){
          System.out.println("Error: " + e);
+         e.printStackTrace();
       }
       
       return id;
@@ -521,6 +524,31 @@ public class DataLayer {
       
    } // end getMatchingFaculty
   
+ //check Username
+   public String getAbstractsById(int id) {
+	   String abstracts = "Abstracts:\n\n";
+	   String query = "SELECT abstract.* FROM abstract "
+	   		+ "JOIN faculty_abstract "
+	   		+ "ON abstract.abstractID = faculty_abstract.abstractID "
+	   		+ "WHERE faculty_abstract.facultyID = ?";
+	   
+       try {
+         PreparedStatement ps = connection.prepareStatement(query);
+         ps.setInt(1, id);
+         
+         ResultSet rs = ps.executeQuery();
+         while (rs.next()) {
+        	 abstracts += "ID: " + rs.getInt(1) + "\nTitle: " + rs.getString(2) + "\nBody: " + rs.getString(3) + "\n\n";
+         }
+         
+       } catch (SQLException e) {
+         System.out.println("Error retrieving abstracts | " + e.getMessage());
+         e.printStackTrace();
+       }
+       
+       return abstracts;
+   }
+   
   //check Username
   public boolean checkUsername(String username) {
       boolean check = false;

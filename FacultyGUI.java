@@ -22,9 +22,8 @@ import javax.swing.border.*;
 public class FacultyGUI {
 
 	private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
-	//private static final Font HEADING_FONT = new Font("Apple Casual", Font.BOLD, 36);
-	private static final Font FONT_SMALL = new Font("Apple Casual", Font.PLAIN, 18);
-	//private static final Insets DEFAULT_INSETS = new Insets(20, 20, 20, 20);
+	private static final Font FONT_SMALL = new Font("Apple Casual", Font.PLAIN, 12);
+	private static final Insets DEFAULT_INSETS = new Insets(20, 20, 20, 20);
 	private static final Border DEFAULT_PADDING = BorderFactory.createEmptyBorder(40, 40, 40, 40);
 
 	private JFrame frame;
@@ -54,14 +53,9 @@ public class FacultyGUI {
 	
 	// faculty is signed up (login)
 	public FacultyGUI(String dbUsername, String dbPassword, String database, String username) {
-		// Initialize data layer
+		this.username = username;
 		dl = new DataLayer(dbUsername, dbPassword, database);
 		showHome();
-	}
-	
-	private int loadID(String username) {
-		
-		return 1;
 	}
 	
 	// Show register dialog for faculty
@@ -133,7 +127,7 @@ public class FacultyGUI {
 	    	int id = new Random().nextInt(10000); // I dont know why ID isn't set to auto increment??
 	    	int res = dl.insertFacultyMember(id, fname, lname, email, phoneNum, officePhoneNum, ID, buildingCode, ID);
 	    	if (res != -1) {
-	    		ID = loadID(username);
+	    		ID = dl.getUserId(username);
 	    		showHome();
 	    	} else {
 	    		JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
@@ -143,7 +137,7 @@ public class FacultyGUI {
 	}
 	
 	private void showHome() {
-		ID = loadID(username);
+		ID = dl.getUserId(username);
 		// Set up frame
 		frame = new JFrame();
 		frame.setSize(400, 800);
@@ -158,15 +152,17 @@ public class FacultyGUI {
 		frame.add(heading, BorderLayout.PAGE_START);
 				
 		// Abstracts view
-		abstracts = new JPanel();
-		abstracts.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10), BorderFactory.createLineBorder(Color.black, 2)));
-		String abstractData = "[abstracts go here]"; //FIX THIS: needs a d.lgetAbstractsByFaculty(int facId) method 
-		JLabel abstractLabel = new JLabel(abstractData);
-		abstractLabel.setFont(FONT_SMALL);
-		abstractLabel.setAlignmentX(0);
-		abstractLabel.setAlignmentY(1);
-		abstracts.add(abstractLabel);
-		frame.add(abstracts, BorderLayout.CENTER);
+		String abstractData = dl.getAbstractsById(ID);
+		JTextArea abstractsText = new JTextArea(abstractData);
+		abstractsText.setLineWrap(true);
+		abstractsText.setWrapStyleWord(true);
+		abstractsText.setFont(FONT_SMALL);
+		abstractsText.setEditable(false);
+		abstractsText.setAlignmentX(0);
+		abstractsText.setAlignmentY(1);
+		abstractsText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		JScrollPane scroller = new JScrollPane(abstractsText);
+		frame.add(scroller, BorderLayout.CENTER);
 		
 		buttons = new JPanel();
 		buttons.setLayout(new GridLayout(6, 1));
