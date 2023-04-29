@@ -110,7 +110,7 @@ public class DataLayer {
 	}
    
    // insert person 
-   public void insertPerson(String username, String password, int id, String discriminator){
+   public int insertPerson(String username, String password, int id, String discriminator){
       String sql = "";
       String secretKey = "turtles";
       String encryptedPass = encrypt(password, secretKey);
@@ -135,10 +135,12 @@ public class DataLayer {
 	    statement.executeUpdate();
          }
          System.out.println("User profile has been inserted successfully");
+         return 0;
       }
       catch (SQLException e) {
            // handle any errors
            e.printStackTrace();
+           return -1;
       }
    }
    	
@@ -263,7 +265,7 @@ public class DataLayer {
    }
    
    //Add a guest
-   public void insertGuest(int guestID, String fName, String lName, String company, String email, String phoneNum) {
+   public int insertGuest(int guestID, String fName, String lName, String company, String email, String phoneNum) {
        try {
            // create SQL statement
            String sql = "INSERT INTO guest (guestID, fName, lName, company, email, phoneNum) " +
@@ -279,15 +281,16 @@ public class DataLayer {
            statement.setString(6, phoneNum);
    
            // execute statement
-           statement.executeUpdate();
+           int rows = statement.executeUpdate();
    
            System.out.println("New guest inserted successfully!");
+           return rows;
        } catch (SQLException e) {
            // handle any errors
            e.printStackTrace();
+           return -1;
        }
    }
-
    
    //start of insertFacultyAbstract
    public void insertFacultyAbstract(String abstractTitle, String abstractText, int facultyID){
