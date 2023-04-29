@@ -226,7 +226,7 @@ public class DataLayer {
    }
    
    //Add a student
-   public void insertStudent(int studentID, String fName, String lName, String email, String phoneNum, int departmentId) {
+   public int insertStudent(int studentID, String fName, String lName, String email, String phoneNum, int departmentId) {
        try {
            // create SQL statement
            String sql = "INSERT INTO student (studentID, fName, lName, email, phoneNum, departmentID) " +
@@ -245,9 +245,11 @@ public class DataLayer {
            statement.executeUpdate();
    
            System.out.println("New student inserted successfully!");
+	       return 0;
        } catch (SQLException e) {
            // handle any errors
            e.printStackTrace();
+	       return -1;
        }
    }
    
