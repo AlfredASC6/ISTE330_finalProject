@@ -45,11 +45,11 @@ public class StudentGUI {
       boolean connected = dl.loadConnection(dbUsername, dbPassword, dbName);
       
       if(!connected){
-         JOptionPane.showMessageDialog(null,"Unable to connect to data source\nPlease re-run the program");
+    	  	JOptionPane.showMessageDialog(null,"Unable to connect to data source\nPlease re-run the program");
       }
       else{
-         //id = dl.getStudentId(username);
-         this.displayStudentHome();
+  	    	id = dl.getUserId(username);
+  	    	this.displayStudentHome();
       } // end else
    } // end constructor 
    
@@ -135,7 +135,7 @@ public class StudentGUI {
 	        this.registerStudent();
 	        return;
 	    }
-	    System.out.println(insertPersonResult);
+	    
 	    id = dl.getUserId(username);
 	    if (id == -1) {
 	        JOptionPane.showMessageDialog(null, "An error occurred while getting the userID. Please try again.");
