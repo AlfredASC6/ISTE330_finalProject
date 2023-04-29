@@ -143,9 +143,9 @@ public class FacultyGUI {
 	    }
 	    else {
 	    	int res = dl.insertPerson(username, password, ID, "F");
+    		ID = dl.getUserId(username);
 	    	res = dl.insertFacultyMember(ID, fname, lname, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentId);
 	    	if (res != -1) {
-	    		ID = dl.getUserId(username);
 	    		showHome();
 	    	} else {
 	    		JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
