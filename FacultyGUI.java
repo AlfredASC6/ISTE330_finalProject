@@ -22,9 +22,9 @@ import javax.swing.border.*;
 public class FacultyGUI {
 
 	private static final Font DEFAULT_FONT = new Font("Apple Casual", Font.PLAIN, 24);
-	private static final Font HEADING_FONT = new Font("Apple Casual", Font.BOLD, 36);
+	//private static final Font HEADING_FONT = new Font("Apple Casual", Font.BOLD, 36);
 	private static final Font FONT_SMALL = new Font("Apple Casual", Font.PLAIN, 18);
-	private static final Insets DEFAULT_INSETS = new Insets(20, 20, 20, 20);
+	//private static final Insets DEFAULT_INSETS = new Insets(20, 20, 20, 20);
 	private static final Border DEFAULT_PADDING = BorderFactory.createEmptyBorder(40, 40, 40, 40);
 
 	private JFrame frame;
@@ -34,6 +34,7 @@ public class FacultyGUI {
 
 	private JButton addKeyTopic;
 	private JButton deleteKeyTopic;
+	private JButton matchKeyTopics;
 	private JButton addAbstract;
 	private JButton editAbstract;
 	private JButton deleteAbstract;
@@ -42,7 +43,7 @@ public class FacultyGUI {
 	private JTextField abstractBody;
 
 	private DataLayer dl;
-	private final int ID = 1;
+	private int ID;
 	private String username;
 
 	// faculty is not signed up (sign up)
@@ -56,6 +57,11 @@ public class FacultyGUI {
 		// Initialize data layer
 		dl = new DataLayer(dbUsername, dbPassword, database);
 		showHome();
+	}
+	
+	private int loadID(String username) {
+		
+		return 1;
 	}
 	
 	// Show register dialog for faculty
@@ -127,6 +133,7 @@ public class FacultyGUI {
 	    	int id = new Random().nextInt(10000); // I dont know why ID isn't set to auto increment??
 	    	int res = dl.insertFacultyMember(id, fname, lname, email, phoneNum, officePhoneNum, ID, buildingCode, ID);
 	    	if (res != -1) {
+	    		ID = loadID(username);
 	    		showHome();
 	    	} else {
 	    		JOptionPane.showMessageDialog(null, "An error occurred while inserting the user. Please try again.");
@@ -136,6 +143,7 @@ public class FacultyGUI {
 	}
 	
 	private void showHome() {
+		ID = loadID(username);
 		// Set up frame
 		frame = new JFrame();
 		frame.setSize(400, 800);
@@ -161,17 +169,21 @@ public class FacultyGUI {
 		frame.add(abstracts, BorderLayout.CENTER);
 		
 		buttons = new JPanel();
-		buttons.setLayout(new GridLayout(5, 1));
+		buttons.setLayout(new GridLayout(6, 1));
 		
 	    // key topic buttons and abstract buttons
-		addKeyTopic = new JButton("Insert Key Topic");
+		addKeyTopic = new JButton("Insert Keytopic");
 		addKeyTopic.setFont(DEFAULT_FONT);
 		addKeyTopic.addActionListener(add_keytopic_listener());
 		buttons.add(addKeyTopic);
-		deleteKeyTopic = new JButton("Delete Key Topic");
+		deleteKeyTopic = new JButton("Delete Keytopic");
 		deleteKeyTopic.setFont(DEFAULT_FONT);
 		deleteKeyTopic.addActionListener(delete_keytopic_listener());
 		buttons.add(deleteKeyTopic);
+		matchKeyTopics = new JButton("Match Keytopics");
+		matchKeyTopics.setFont(DEFAULT_FONT);
+		matchKeyTopics.addActionListener(match_keytopics_listener());
+		buttons.add(matchKeyTopics);
 		addAbstract = new JButton("Add Abstract");
 		addAbstract.setFont(DEFAULT_FONT);
 		addAbstract.setPreferredSize(new Dimension(300, 50));
@@ -218,10 +230,6 @@ public class FacultyGUI {
 			JOptionPane.showMessageDialog(null, "Error", "An error occurred while inserting keytopic.", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	// Perform add keytopic call
-	//private ActionListener submit_keytopic() {
-		
-	//}
 	
 	// Handle delete keytopic button
 	private ActionListener delete_keytopic_listener() {
@@ -247,12 +255,17 @@ public class FacultyGUI {
 			JOptionPane.showMessageDialog(null, "Error", "An error occurred while inserting keytopic.", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	// Perform delete keytopic call
-	//private ActionListener delete_keytopic() {
-		
-	//}
 	
-	
+	// Handle matching keytopics button
+	private ActionListener match_keytopics_listener() {
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String matches = dl.match(ID, "F");
+				JOptionPane.showMessageDialog(null, matches, "Found Matches", JOptionPane.PLAIN_MESSAGE);
+			}
+		};
+	}
 	
 	// Handle add abstract button
 	private ActionListener add_abstract_listener() {
