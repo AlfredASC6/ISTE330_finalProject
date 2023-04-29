@@ -80,16 +80,6 @@ public class PresentationLayer {
       		selectionFrame.add(selectionPanel);
       		selectionFrame.setLocationRelativeTo(null);
       		selectionFrame.setVisible(true);
-		      ///// testing GUIs remove later /////
-		      //new GuestGUI(dbUsername, dbPassword, dbName);
-		      //new FacultyGUI(dbUsername, dbPassword, dbName);
-		      //new StudentGUI(dbUsername, dbPassword, dbName);
-		      
-		      
-		      // ASK USER IF THEY ARE A FACULTY, STUDENT, OR GUEST HERE 
-		      // set discriminator = f, s, or g depending on answer 
-		      
-		      // IF STATEMENTS THAT CALL METHODS DEPENDING ON DISCRIMINATOR 
 	}
 
 	private void showLoginAndSignupFrame() {
