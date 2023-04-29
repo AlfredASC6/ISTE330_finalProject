@@ -107,12 +107,12 @@ CREATE TABLE guest_keytopics(
 -- the first professor, student, and guest will match
 -- the second professor, student, and guest will match
 -- everyone has the same phone number because this is just for testing 
-INSERT INTO person (username, password, ID, discriminator) VALUES ("prof1", "password1", 0001, "F");
-INSERT INTO person (username, password, ID, discriminator) VALUES ("prof2", "password1", 0002, "F");
-INSERT INTO person (username, password, ID, discriminator) VALUES ("student1", "password1", 1001, "S");
-INSERT INTO person (username, password, ID, discriminator) VALUES ("student2", "password1", 1002, "S");
-INSERT INTO person (username, password, ID, discriminator) VALUES ("guest1", "password1", 2001, "G");
-INSERT INTO person (username, password, ID, discriminator) VALUES ("guest2", "password1", 2002, "G");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("prof1", "N95efReSo07Za812HPihfg==", 0001, "F");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("prof2", "N95efReSo07Za812HPihfg==", 0002, "F");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("student1", "N95efReSo07Za812HPihfg==", 1001, "S");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("student2", "N95efReSo07Za812HPihfg==", 1002, "S");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("guest1", "N95efReSo07Za812HPihfg==", 2001, "G");
+INSERT INTO person (username, password, ID, discriminator) VALUES ("guest2", "N95efReSo07Za812HPihfg==", 2002, "G");
 
 INSERT INTO department (departmentID, department) VALUES (1, "Computer Science");
 INSERT INTO department (departmentID, department) VALUES (2, "Computer Engineering");
@@ -125,26 +125,8 @@ INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, o
 INSERT INTO faculty (facultyID, fName, lName, email, phoneNum, officePhoneNum, officeNum, buildingCode, departmentID)
 	VALUES (0002, "Jane", "Brown", "janebrown@rit.edu", "5851111111", "5851111111", 222, "KGH", 2);
     
-INSERT INTO abstract (abstractID, title, abstract) VALUES (1, "Introduction to Computing and Programming in PYTHON – A
-													Multimedia Approach", "The programming language used in this book is Python. Python
-													has been described as “executable pseudo-code.” I have found
-													that both computer science majors and non majors can learn
-													Python. Since Python is actually used for communications tasks
-													(e.g., Web site Development), it’s relevant language for an in
-													introductory computing course. The specific dialect of Python
-													used in this book is Jython. Jython is Python. The differences
-													between Python (normally implemented in C) and Jython
-													(which is implemented in Java) are akin to the differences
-													between any two language implementations (e.g., Microsoft vs.
-													GNU C++ implementations).");
-INSERT INTO abstract (abstractID, title, abstract) VALUES (2, "C through Design", "This book presents ‘standard’ C, i.e., code that compiles cleanly
-													with a compiler that meets the ANSI C standard. This book has
-													over 90 example programs that illustrate the topics of each
-													chapters. In addition complete working programs are
-													developed fully, from design to program output. This book is
-													filled with Antibugging Notes (the stress traps to be avoided),
-													and Quick Notes, that emphasize important points to be
-													remembered.");
+INSERT INTO abstract (abstractID, title, abstract) VALUES (1, "Introduction to Computing and Programming in PYTHON – A Multimedia Approach", "The programming language used in this book is Python. Python has been described as “executable pseudo-code.” I have found that both computer science majors and non majors can learn Python. Since Python is actually used for communications tasks (e.g., Web site Development), it’s relevant language for an in introductory computing course. The specific dialect of Python used in this book is Jython. Jython is Python. The differences between Python (normally implemented in C) and Jython (which is implemented in Java) are akin to the differences between any two language implementations (e.g., Microsoft vs. GNU C++ implementations).");
+INSERT INTO abstract (abstractID, title, abstract) VALUES (2, "C through Design", "This book presents ‘standard’ C, i.e., code that compiles cleanly with a compiler that meets the ANSI C standard. This book has over 90 example programs that illustrate the topics of each chapters. In addition complete working programs are developed fully, from design to program output. This book is filled with Antibugging Notes (the stress traps to be avoided), and Quick Notes, that emphasize important points to be remembered.");
 
 INSERT INTO faculty_abstract (facultyID, abstractID) VALUES (0001, 1);
 INSERT INTO faculty_abstract (facultyID, abstractID) VALUES (0002, 2);
