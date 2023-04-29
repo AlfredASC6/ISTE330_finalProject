@@ -163,7 +163,7 @@ public class StudentGUI {
 	   frame.setLocation(125, 75);
 	   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	   home = new JPanel();
-	   home.setLayout(new GridLayout(3, 1));
+	   home.setLayout(new GridLayout(4, 1));
 
 	   // Heading element
 	   heading = new JLabel("Student Home", SwingConstants.CENTER);
