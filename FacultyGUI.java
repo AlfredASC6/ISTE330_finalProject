@@ -48,10 +48,11 @@ public class FacultyGUI {
 	}
 	
 	// faculty is signed up (login)
-	public FacultyGUI(String username, String password, String database, boolean registered) {
+	public FacultyGUI(String dbUsername, String dbPassword, String database, String username) {
 		// Initialize data layer
-		dl = new DataLayer(username, password, database);
-		
+		dl = new DataLayer(dbUsername, dbPassword, database);
+		boolean registered = dl.checkUsername(username);
+		// Show appropriate window
 		if (!registered) {
 			register();
 		} else {
@@ -256,23 +257,27 @@ public class FacultyGUI {
 
 		// Retrieve abstract
 		String abstractID = JOptionPane.showInputDialog(null, "Enter the ID of the abstract to edit:", "Enter ID", 0);
-		int id = Integer.parseInt(abstractID);
-		String abstractTitleText = "Old title: "; //NEEDS dl.getAbstractTitle(ID, id)
-		String abstractText = "Old abstract: " + dl.getAbstract(ID, id);
+		int aID;
+		try {
+			aID = Integer.parseInt(abstractID);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Error", "Please enter a valid ID number.", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 
 		abstractName = new JTextField();
-		abstractName.setText(abstractTitleText);
+		abstractName.setText("[new abstract title]");
 		abstractName.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10), abstractName.getBorder()));
 		dialog.add(abstractName, BorderLayout.PAGE_START);
 		
 		abstractBody = new JTextField();
-		abstractBody.setText(abstractText);
+		abstractBody.setText("[new abstract body]");
 		abstractBody.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 10, 10, 10), abstractBody.getBorder()));
 		abstractBody.setAlignmentY(1);
 		dialog.add(abstractBody, BorderLayout.CENTER);
 		
 		JButton submit = new JButton("Confirm Edit");
-		submit.addActionListener(confirm_abstract(abstractText, abstractTitleText));
+		submit.addActionListener(confirm_abstract(aID));
 		dialog.add(submit, BorderLayout.PAGE_END);
 		
 		// Finish up and show dialog
@@ -280,11 +285,11 @@ public class FacultyGUI {
 	}
 
 	// Perform update call
-	private ActionListener confirm_abstract(String oldName, String oldBody) {
+	private ActionListener confirm_abstract(int id) {
 		return new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dl.updateFacultyAbstract(oldName, abstractName.getText(), oldBody, abstractBody.getText());
+				dl.updateFacultyAbstract(id, abstractName.getText(), abstractBody.getText());
 				JOptionPane.showMessageDialog(null, "Abstract successfully updated.", "Success", JOptionPane.INFORMATION_MESSAGE);
 			}
 		};

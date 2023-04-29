@@ -355,22 +355,15 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS update_abstract;
 DELIMITER //
 CREATE PROCEDURE update_abstract(
-	IN oldTitle VARCHAR(120),
-    IN newTitle VARCHAR(120),
-    IN oldAbstract MEDIUMTEXT,
+	IN ID INT,
+    IN newTitle MEDIUMTEXT,
     IN newAbstract MEDIUMTEXT
 )
 BEGIN
-
-	DECLARE id INT;
     
-    SELECT abstractID INTO id 
-		FROM abstract
-        WHERE title LIKE oldTitle;
-        
 	UPDATE abstract 
 		SET title = newTitle, abstract = newAbstract
-        WHERE title = oldTitle AND abstract = oldAbstract;
+        WHERE abstractID = ID;
 	
 END //
 DELIMITER ;

@@ -100,7 +100,7 @@ public class PresentationLayer {
 			} else if ("G".equals(discriminator)) {
 				new GuestGUI(dbUsername, dbPassword, dbName);
 			} else if ("F".equals(discriminator)) {
-				new FacultyGUI(dbUsername, dbPassword, dbName, false);
+				new FacultyGUI(dbUsername, dbPassword, dbName, "");
 			}
 		});
 		panel.add(signUpButton);
@@ -142,7 +142,7 @@ public class PresentationLayer {
 	                } else if ("G".equals(discrim)) {
 	                    new GuestGUI(dbUsername, dbPassword, dbName, username);
 	                } else if ("F".equals(discrim)) {
-	                    //new FacultyGUI(dbUsername, dbPassword, dbName, username);
+	                    new FacultyGUI(dbUsername, dbPassword, dbName, username);
 	                }
 	            }
 	        }

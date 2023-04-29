@@ -320,16 +320,14 @@ public class DataLayer {
    }//end of deleteFacultyAbstract
    
    //start of updateFacultyAbstract
-   public void updateFacultyAbstract(String oldTitle, String newTitle, String oldText, String newAbstract){
+   public void updateFacultyAbstract(int abstractID, String newTitle, String newAbstract){
       try{
-    	  System.out.println("Old title: " + oldTitle + "\nNew title: " + newTitle + "\nOld text: " + oldText + "\nNew abstract: " + newAbstract);
-         String sql = "{CALL update_abstract(?, ?, ?, ?)}";
+    	 String sql = "{CALL update_abstract(?, ?, ?)}";
          PreparedStatement stmt = connection.prepareStatement(sql);
          // set parameters
-         stmt.setString(1, oldTitle);
+         stmt.setInt(1, abstractID);
          stmt.setString(2, newTitle);
-         stmt.setString(3, oldText);
-         stmt.setString(4, newAbstract);
+         stmt.setString(3, newAbstract);
          
          stmt.executeUpdate();
          
