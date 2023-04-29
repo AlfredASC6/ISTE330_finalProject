@@ -423,10 +423,8 @@ public class DataLayer {
                    matched += "----------\n";
 	            } else if (discriminator.equals("S")) {
 	                matched += getMatchingFaculty(id, discriminator);
-                   matched += "----------\n";
 	            }else if (discriminator.equals("G")) {
 	                matched += getMatchingFaculty(id, discriminator);
-                   matched += "----------\n";
 	            }
 	        }
 	        if (cs.getMoreResults()) {
@@ -511,6 +509,7 @@ public class DataLayer {
    	         matchingFaculty += "Faculty Building Code: " + selectRS.getString("buildingCode") + "\n";
    	         matchingFaculty += "Faculty Department ID: " + selectRS.getString("departmentID") + "\n";
    	         matchingFaculty += "Faculty_Topic: " + keytopics.get(i) + "\n";
+		 matchingFaculty += "----------\n";
             }
          }
       }
