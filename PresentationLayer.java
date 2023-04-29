@@ -142,7 +142,7 @@ public class PresentationLayer {
 	                } else if ("G".equals(discrim)) {
 	                    new GuestGUI(dbUsername, dbPassword, dbName, username);
 	                } else if ("F".equals(discrim)) {
-	                    //new FacultyGUI(dbUsername, dbPassword, dbName);
+	                    //new FacultyGUI(dbUsername, dbPassword, dbName, username);
 	                }
 	            }
 	        }
