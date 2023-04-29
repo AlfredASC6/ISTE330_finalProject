@@ -29,6 +29,7 @@ public class StudentGUI {
    String email = new String();
    String phoneNum = new String();
    int id;
+   int departmentID;
    
    // user input variables 
    String keytopic = new String();
@@ -69,7 +70,7 @@ public class StudentGUI {
    } // end constructor 
    
    public void registerStudent() {
-	    JPanel registerBox = new JPanel(new GridLayout(6, 2));
+	    JPanel registerBox = new JPanel(new GridLayout(7, 2));
 
 	    // labels
 	    JLabel usernameLbl = new JLabel("Username: ");
@@ -78,6 +79,7 @@ public class StudentGUI {
 	    JLabel lnameLbl = new JLabel("Last Name: ");
 	    JLabel emailLbl = new JLabel("Email: ");
 	    JLabel phoneNumLbl = new JLabel("Phone Number: ");
+	    JLabel departmentIDLbl = new JLabel("Department ID: "); 
 
 	    // fields
 	    JTextField usernameTf = new JTextField("");
@@ -86,6 +88,7 @@ public class StudentGUI {
 	    JTextField lnameTf = new JTextField("");
 	    JTextField emailTf = new JTextField("");
 	    JTextField phoneNumTf = new JTextField("");
+	    JTextField departmentIDTf = new JTextField(""); 
 
 	    // build JPanel
 	    registerBox.add(usernameLbl);
@@ -100,7 +103,8 @@ public class StudentGUI {
 	    registerBox.add(emailTf);
 	    registerBox.add(phoneNumLbl);
 	    registerBox.add(phoneNumTf);
-
+	    registerBox.add(departmentIDLbl); 
+	    registerBox.add(departmentIDTf); 
 	    // display JPanel
 	    JOptionPane.showMessageDialog(null, registerBox, "Register New Student", JOptionPane.INFORMATION_MESSAGE);
 
@@ -111,7 +115,8 @@ public class StudentGUI {
 	    lname = lnameTf.getText();
 	    email = emailTf.getText();
 	    phoneNum = phoneNumTf.getText();
-      
+	    departmentID = Integer.parseInt(departmentIDTf.getText()); 
+
 	    registerAndDisplayStudentHome();
 	    
 	}
@@ -130,15 +135,15 @@ public class StudentGUI {
 	        this.registerStudent();
 	        return;
 	    }
-
-	    int newId = dl.getUserId(username);
-	    if (newId == -1) {
+	    System.out.println(insertPersonResult);
+	    id = dl.getUserId(username);
+	    if (id == -1) {
 	        JOptionPane.showMessageDialog(null, "An error occurred while getting the userID. Please try again.");
 	        this.registerStudent();
 	        return;
 	    }
 
-	    int insertStudentResult = dl.insertStudent(id, fname, lname, email, phoneNum, newId);
+	    int insertStudentResult = dl.insertStudent(id, fname, lname, email, phoneNum, departmentID);
 	    if (insertStudentResult == -1) {
 	        JOptionPane.showMessageDialog(null, "An error occurred while inserting the student. Please try again.");
 	        this.registerStudent();
