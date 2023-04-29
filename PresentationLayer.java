@@ -149,12 +149,6 @@ public class PresentationLayer {
 	    }
 	}
    
-   /**************
-      - We need a method that displays a log in GUI that can be called 
-      for any faculty, student, or guest
-      - Just prompts for username & password 
-   ***************/
-   
    public static void main(String [] args){
       System.out.println("ISTE330-01  Group Project HW3 Group 2  2023-04-28\n");
       System.out.println("Default Password: student");
