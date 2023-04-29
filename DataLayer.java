@@ -80,30 +80,18 @@ public class DataLayer {
 	}
 
 	// insert person 
-	public int insertPerson(String username, String password, int id, String discriminator){
+	public int insertPerson(String username, String password, String discriminator){
 		String sql = "";
 		String secretKey = "turtles";
 		String encryptedPass = encrypt(password, secretKey);
 
 		try{
-			// faculty and student will use RIT id, guest will be given one (field is auto increment)
-			if(discriminator.equals("G")){
-				sql = "INSERT INTO person (username, password, discriminator) VALUES (?, ?, ?)";
-				PreparedStatement statement = connection.prepareStatement(sql);
-				statement.setString(1, username);
-				statement.setString(2, encryptedPass);
-				statement.setString(3, discriminator);
-				statement.executeUpdate();
-			}
-			else{
-				sql = "INSERT INTO person (username, password, ID, discriminator) VALUES (?, ?, ?, ?)";
-				PreparedStatement statement = connection.prepareStatement(sql);
-				statement.setString(1, username);
-				statement.setString(2, encryptedPass);
-				statement.setInt(3, id);
-				statement.setString(4, discriminator);
-				statement.executeUpdate();
-			}
+			sql = "INSERT INTO person (username, password, discriminator) VALUES (?, ?, ?)";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, encryptedPass);
+			statement.setString(3, discriminator);
+			statement.executeUpdate();
 			System.out.println("User profile has been inserted successfully");
 			return 0;
 		}
@@ -113,6 +101,7 @@ public class DataLayer {
 			return -1;
 		}
 	}
+
 
 	// delete key topic
 	public int deleteKeyTopic(String topic, int ID, String discriminator) {
